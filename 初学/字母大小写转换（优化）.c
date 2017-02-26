@@ -1,4 +1,4 @@
-#include <stdio.h>                                                                                                    +e <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 int main(void)
@@ -6,9 +6,12 @@ int main(void)
    char c,d;
    scanf("%c",&c);
 
-   (c >= 'a' && c <= 'z') ? (d = c - 32) : (d = c + 32);
+   if (c >= 'a'&& c <= 'z')
+    d = c - 32;
+   else if (c >= 'A'&& c <= 'Z')
+    d = c + 32;
 
-   printf("result:%c to %c",c,d);
+   printf("Result:%c to %c",c,d);
 
     return 0;
 }
