@@ -3,26 +3,33 @@
 
 int main(void)
 {
-    float a = 0;
-    printf("Please input a number:");
-    scanf("%f",&a);
+   int month = 0;
+   printf("which month:");
+   scanf("%d",&month);
 
-    if (a>0)
-        printf("%.2f is a positive number\n",a);
-    else if (a<0)
-        printf("%.2f is a negative number\n",a);
-    else if (a==0)
-        printf("%.2f is a zero\n",a);
+   switch(month){
+   case 2:
+       printf("There are 28 or 29 days in this month\n");
+       break;
+   case 1:
+   case 3:
+   case 5:
+   case 7:
+   case 8:
+   case 10:
+   case 12:
+       printf("There are 31 days in this month\n");
+       break;
+   case 4:
+   case 6:
+   case 9:
+   case 11:
+       printf("There are 30 days in this month\n");
+       break;
+   default :
+       printf("Input a wrong month\n");
 
-    int b = 0;
-    printf("Please input a int number:");
-    scanf("%d",&b);
-
-    if (0 == b % 2)
-        printf("%d is even\n",b);
-    else
-        printf("%d is obb\n",b);
-
+   }
 
     return 0;
 }
