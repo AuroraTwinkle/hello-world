@@ -5,11 +5,10 @@ int main(void)
 {
    char c,d;
    scanf("%c",&c);
-   if (c >= 'a'&& c <= 'z')
-    d = c - 32;
-   else if (c >= 'A'&& c <= 'Z')
-    d = c + 32;
-   printf("%c",d);
+
+   (c >= 'a' && c <= 'z') ? (d = c - 32) : (d = c + 32);
+
+   printf("result:%c to %c",c,d);
 
     return 0;
 }
