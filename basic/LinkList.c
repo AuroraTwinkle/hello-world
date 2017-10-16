@@ -16,14 +16,21 @@ void SearchList1(int pos);//按位置查找
 void ReverseList();//头插法逆置
 void ReverseList1();
 void FreeList(ListNodePtr head);
+void InsertList(int pos,int data);
+void DeleteList(int pos);
+void setPositionList(int pos,ListNodePtr *ptr);
 
 int main(void)
 {
     InitList();
     BuildList();
     DisplayList();
-    ReverseList1();
+    //ReverseList1();
+    InsertList(5,468);
+    DeleteList(5);
     DisplayList();
+    SearchList(100);
+    SearchList1(5);
     FreeList(head);
     return 0;
 }
@@ -51,7 +58,8 @@ void BuildList()
     {
         ListNodePtr p;
         p = (ListNodePtr)malloc(sizeof(ListNode));
-        p -> data = rand()%100+1;
+        //p -> data = rand()%100+1;
+        p -> data = i;
         p -> next = NULL;
         if(head -> next == NULL)
         {
@@ -111,4 +119,72 @@ void FreeList(ListNodePtr head)
         free(head);
         head = temp;
     }
+}
+
+void SearchList(int data)
+{
+    ListNodePtr p;
+    p = head -> next;
+    int search_result = 0;
+    int turn = 1;
+    while(p && search_result == 0)
+    {
+        turn++;
+        if(p->data == data)
+        {
+            printf("%d",turn);
+            search_result = 1;
+        }
+        p = p -> next;
+    }
+    if(search_result == 0)
+    {
+        printf("Not found this value!");
+    }
+}
+
+void SearchList1(int pos)
+{
+    ListNodePtr q;
+    setPositionList(pos,&q);
+    printf("%d",q->data);
+
+}
+
+void setPositionList(int pos,ListNodePtr *ptr)
+{
+    ListNodePtr p = head -> next;
+    int i = 1;
+    while(p && i<pos)
+    {
+        i++;
+        p = p -> next;
+    }
+    if(p && i == pos)
+    {
+        *ptr = p;
+    }
+    else
+    {
+        printf("Not found this node!");
+    }
+}
+
+void InsertList(int pos,int data)
+{
+    ListNodePtr p,q;
+    setPositionList(pos-1,&p);
+    q = (ListNodePtr)malloc(sizeof(ListNode));
+    q -> data = data;
+    q -> next = p -> next;
+    p -> next = q;
+}
+
+void DeleteList(int pos)
+{
+    ListNodePtr p,q;
+    setPositionList(pos-1,&p);
+    p -> next = q -> next;
+    free(q);
+
 }
