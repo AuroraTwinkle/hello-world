@@ -186,5 +186,4 @@ void DeleteList(int pos)
     setPositionList(pos-1,&p);
     p -> next = q -> next;
     free(q);
-
 }
