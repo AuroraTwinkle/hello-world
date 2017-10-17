@@ -57,7 +57,7 @@ void Stack::ClearStack()
 
 void Stack::ShowStack()
 {
-    for(int i=0;i<=top;i++)
+    for(int i=top;i>=0;i--)
     {
         cout<<stack[i]<<"\t";
         if(i % 10 == 0)
