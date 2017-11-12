@@ -4,6 +4,7 @@
 #define SIZE 1009
 
 void Guide();
+void InitContact();
 void AddContact();
 void ExportContact();
 void SearchContact();
@@ -12,18 +13,21 @@ void ModifyContact();
 void DeleteContact();
 void ShowContact();
 int Hash(char *string);
+int turn[1009];
+int Flag = 0;
 
 typedef struct contact
 {
 	char name[20];
-	char phone[15];
+	int phone[15];
 	char address[50];
-}Contact;
+} Contact;
 
 Contact contact[SIZE];
 
 int main(void)
 {
+	InitContact();
 	while (1)
 	{
 		int choice = 0;
@@ -77,15 +81,16 @@ void ExportContact()
 void NewContact()
 {
 	char name[20];
-	int i=0;
+	int i = 0;
 	printf("please input name:\n");
-	scanf("%s",name);
+	scanf("%s", name);
 	i = Hash(name);
-	strcpy(Contact[i].name,name);
+	turn[Flag++] = i;
+	strcpy(contact[i].name, name);
 	printf("please input phone:\n");
-	scanf("%s", &Contact[i].phone);
+	scanf("%d", &contact[i].phone);
 	printf("please input address:\n");
-	scanf("%s", &Contact[i].address);
+	scanf("%s", &contact[i].address);
 }
 
 void DeleteContact()
@@ -95,7 +100,13 @@ void DeleteContact()
 
 void ShowContact()
 {
-	;
+	for (int i = 0; i < Flag; i++)
+	{
+		int j = turn[i];
+		printf("name:%s\tphonenumber:%s\taddress:%s\t\n", contact[j].name, contact[j].phone, contact[j].address);
+		printf("%d\n", j);
+		printf("*******************************************************************************\n");
+	}
 }
 
 void ModifyContact()
@@ -105,7 +116,9 @@ void ModifyContact()
 
 void SearchContact()
 {
-	;
+	char name[20];
+	printf("please input name that you want to search:\n");
+	scanf(("%s", name));
 }
 
 void Guide()
@@ -118,10 +131,18 @@ void Guide()
 
 int Hash(char *string)
 {
-	int sum=0;
-	for(int i=0;i<20;i++)
+	int sum = 0;
+	for (int i = 0; i < 20; i++)
 	{
 		sum += string[i];
 	}
 	return sum % SIZE;
+}
+
+void InitContact()
+{
+	for (int i = 0; i < 1009; i++)
+	{
+		contact[i].phone[0] = -1;
+	}
 }
