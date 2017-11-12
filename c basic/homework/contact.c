@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void Guide();
 void BuildContact();
 void AddContact();
 void ExportContact();
@@ -12,19 +13,16 @@ void ShowContact();
 
 int main(void)
 {
-	int choice=0;
-	printf("what do you want to do?");
-	printf("1.build a contact\n2.add from file\n3.export to file\n");
-	printf("4.search for contact\n5.build a new contact\n6.modify contact\n");
-	printf("7.delete contact\n8.show all contacts\n9.exit\n");
-	scanf("%d",&choice);
-	while(choice<=-1 || choice>=10)
+	while (1)
 	{
-		printf("please input right choice\n");
-		scanf("%d",&choice);
-	}
-	while(1)
-	{
+		int choice = 0;
+		Guide();
+		scanf("%d", &choice);
+		while (choice <= -1 || choice >= 10)
+		{
+			printf("please input right choice\n");
+			scanf("%d", &choice);
+		}
 		switch (choice)
 		{
 		case 1:
@@ -51,14 +49,57 @@ int main(void)
 		case 8:
 			ShowContact();
 			break;
-		default:
-
+		default:;
 		}
-		if(choice == 9)
+		if (choice == 9)
 			break;
 	}
-	
-
 }
-		
-	
+
+void BuildContact()
+{
+	;
+}
+
+void AddContact()
+{
+	;
+}
+
+void ExportContact()
+{
+	;
+}
+
+void NewContact()
+{
+	;
+}
+
+void DeleteContact()
+{
+	;
+}
+
+void ShowContact()
+{
+	;
+}
+
+void ModifyContact()
+{
+	;
+}
+
+void SearchContact()
+{
+	;
+}
+
+void Guide()
+{
+	printf("what do you want to do?\n");
+	printf("1.build a contact\n2.add from file\n3.export to file\n");
+	printf("4.search for contact\n5.build a new contact\n6.modify contact\n");
+	printf("7.delete contact\n8.show all contacts\n9.exit\n");
+}
