@@ -76,7 +76,16 @@ void ExportContact()
 
 void NewContact()
 {
-	;
+	char name[20];
+	int i=0;
+	printf("please input name:\n");
+	scanf("%s",name);
+	i = Hash(name);
+	strcpy(Contact[i].name,name);
+	printf("please input phone:\n");
+	scanf("%s", &Contact[i].phone);
+	printf("please input address:\n");
+	scanf("%s", &Contact[i].address);
 }
 
 void DeleteContact()
