@@ -19,7 +19,7 @@ int Flag = 0;
 typedef struct contact
 {
 	char name[20];
-	int phone[15];
+	char phone[15];
 	char address[50];
 } Contact;
 
@@ -85,12 +85,30 @@ void NewContact()
 	printf("please input name:\n");
 	scanf("%s", name);
 	i = Hash(name);
-	turn[Flag++] = i;
-	strcpy(contact[i].name, name);
-	printf("please input phone:\n");
-	scanf("%d", &contact[i].phone);
-	printf("please input address:\n");
-	scanf("%s", &contact[i].address);
+	if (contact[i].phone[0] == '#')
+	{
+		turn[Flag++] = i;
+		strcpy(contact[i].name, name);
+		printf("please input phone:\n");
+		scanf("%s", &contact[i].phone);
+		printf("please input address:\n");
+		scanf("%s", &contact[i].address);
+	}
+	else if (strcmp(contact[i].name, name) == 0)
+	{
+		char choose;
+		printf("the contact has existed,do you want to cover it? Y or N?\n");
+		scanf("%s", &choose);
+		if (choose == 'N')
+			return;
+		else if (choose == 'Y')
+		{
+			printf("please input phone:\n");
+			scanf("%s", &contact[i].phone);
+			printf("please input address:\n");
+			scanf("%s", &contact[i].address);
+		}
+	}
 }
 
 void DeleteContact()
@@ -143,6 +161,7 @@ void InitContact()
 {
 	for (int i = 0; i < 1009; i++)
 	{
-		contact[i].phone[0] = -1;
+		contact[i].phone[0] = '#';
 	}
 }
+1
