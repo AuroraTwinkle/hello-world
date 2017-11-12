@@ -7,7 +7,7 @@ void Guide();
 void InitContact();
 void AddContact();
 void ExportContact();
-void SearchContact();
+bool SearchContact(char *string);
 void NewContact();
 void ModifyContact();
 void DeleteContact();
@@ -50,7 +50,10 @@ int main(void)
 			ExportContact();
 			break;
 		case 4:
-			SearchContact();
+			char name[20];
+			printf("please input name that you want to search:\n");
+			scanf(("%s", name));
+			SearchContact(name);
 			break;
 		case 5:
 			NewContact();
@@ -113,7 +116,13 @@ void NewContact()
 
 void DeleteContact()
 {
-	;
+	char name[20];
+	printf("please input the name that you want to delete:\n");
+	sacnf("%s",name);
+	if(SearchContact(name))
+	{
+		
+	}
 }
 
 void ShowContact()
@@ -132,11 +141,9 @@ void ModifyContact()
 	;
 }
 
-void SearchContact()
+void SearchContact(char *string)
 {
-	char name[20];
-	printf("please input name that you want to search:\n");
-	scanf(("%s", name));
+	;
 }
 
 void Guide()
