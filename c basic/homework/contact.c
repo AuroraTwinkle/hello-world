@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#define SIZE 1009
 
 void Guide();
 void AddContact();
@@ -9,6 +11,7 @@ void NewContact();
 void ModifyContact();
 void DeleteContact();
 void ShowContact();
+int Hash(char *string);
 
 typedef struct contact
 {
@@ -17,7 +20,7 @@ typedef struct contact
 	char address[50];
 }Contact;
 
-Contact contact[1009];
+Contact contact[SIZE];
 
 int main(void)
 {
@@ -61,11 +64,6 @@ int main(void)
 	}
 }
 
-void BuildContact()
-{
-	;
-}
-
 void AddContact()
 {
 	;
@@ -107,4 +105,14 @@ void Guide()
 	printf("1.show all contacts\n2.add from file\n3.export to file\n");
 	printf("4.search for contact\n5.build a new contact\n6.modify contact\n");
 	printf("7.delete contact\n8.exit\n");
+}
+
+int Hash(char *string)
+{
+	int sum=0;
+	for(int i=0;i<20;i++)
+	{
+		sum += string[i];
+	}
+	return sum % SIZE;
 }
