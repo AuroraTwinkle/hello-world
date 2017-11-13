@@ -105,7 +105,6 @@ void AddFileContact()
 		fscanf(fp, "%s", &contact[i].address);
 		turn[Flag++] = i;
 	}
-	Flag--;
 	fclose(fp);
 }
 
