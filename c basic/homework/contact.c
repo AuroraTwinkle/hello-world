@@ -92,7 +92,36 @@ void AddFileContact()
 
 void ExportContact()
 {
-	;
+	char ch;
+	FILE *fp;
+	if ((fp = fopen("export.txt", "w")) == NULL)
+	{
+		printf("failed to open this file!\n");
+		return;
+	}
+	fprintf(fp, "name:               phonenumber:   ddress:\n");
+	for (int i = 0; i < Flag; i++)
+	{
+		int k = turn[i];
+		for (int j = 0; j < 20; j++)
+		{
+			ch = contact[k].name[j];
+			putc(ch, fp);
+		}
+		for (int j = 0; j < 15; j++)
+		{
+			ch = contact[k].phone[j];
+			putc(ch, fp);
+		}
+		for (int j = 0; j < 50; j++)
+		{
+			ch = contact[k].address[j];
+			putc(ch, fp);
+		}
+		fprintf(fp, "%s", "\n");
+	}
+
+	fclose(fp);
 }
 
 void NewContact()
