@@ -9,15 +9,15 @@ void Guide();
 void InitContact();
 void AddContact();
 void ExportContact();
-bool SearchContact(char *string, int p);
+bool SearchContact(char *string, int *p);
 void NewContact();
 void ModifyContact();
 void DeleteContact();
 void ShowContact();
-int Hash(char *string);
+int Hashs(char *string);
 int turn[1009];
 int Flag = 0;
-
+char names[20];
 typedef struct contact
 {
 	char name[20];
@@ -32,7 +32,7 @@ int main(void)
 	InitContact();
 	while (1)
 	{
-		int choice = 0;
+		int choice = 0, j = 0;
 		Guide();
 		scanf("%d", &choice);
 		while (choice <= -1 || choice >= 10)
@@ -42,8 +42,7 @@ int main(void)
 		}
 		switch (choice)
 		{
-			char names[20];
-			int j;
+
 		case 1:
 			ShowContact();
 			break;
@@ -57,7 +56,7 @@ int main(void)
 
 			printf("please input name that you want to search:\n");
 			scanf("%s", names);
-			if (SearchContact(names, j))
+			if (SearchContact(names, &j))
 			{
 
 				printf("name:%s\tphonenumber:%s\taddress:%s\t\n", contact[j].name, contact[j].phone, contact[j].address);
@@ -94,22 +93,21 @@ void ExportContact()
 
 void NewContact()
 {
-	char name[20];
 	int i = 0;
 	printf("please input name:\n");
-	scanf("%s", name);
-	i = Hash(name);
+	scanf("%s", names);
+	i = Hashs(names);
 	printf("i:%d\n", i);
 	if (contact[i].phone[0] == '#')
 	{
 		turn[Flag++] = i;
-		strcpy(contact[i].name, name);
+		strcpy(contact[i].name, names);
 		printf("please input phone:\n");
 		scanf("%s", &contact[i].phone);
 		printf("please input address:\n");
 		scanf("%s", &contact[i].address);
 	}
-	else if (strcmp(contact[i].name, name) == 0)
+	else if (strcmp(contact[i].name, names) == 0)
 	{
 		char choose;
 		printf("the contact has existed,do you want to cover it? Y or N?\n");
@@ -128,11 +126,10 @@ void NewContact()
 
 void DeleteContact()
 {
-	char name[20];
 	printf("please input the name that you want to delete:\n");
-	scanf("%s", name);
+	scanf("%s", names);
 	int temp;
-	if (SearchContact(name, temp))
+	if (SearchContact(names, temp))
 	{
 		contact[temp].phone[0] = '#';
 	}
@@ -144,7 +141,6 @@ void ShowContact()
 	{
 		int j = turn[i];
 		printf("name:%s\tphonenumber:%s\taddress:%s\t\n", contact[j].name, contact[j].phone, contact[j].address);
-		printf("%d\n", j);
 		printf("*******************************************************************************\n");
 	}
 }
@@ -154,13 +150,11 @@ void ModifyContact()
 	;
 }
 
-bool SearchContact(char *string, int p)
+bool SearchContact(char *string, int *p)
 {
-	int i = Hash(string);
+	int i = 0;
+	i = Hashs(string);
 	int d = 1;
-	printf("%d\n", i);
-	//printf("%d\n",strcmp(contact[i].name,string));
-	//printf("%s\t%s\t",contact[i].name,string);
 	while (strcmp(contact[i].name, string) != 0 && d < SIZE)
 	{
 		i = (i + d) % SIZE;
@@ -168,7 +162,7 @@ bool SearchContact(char *string, int p)
 	}
 	if (d < SIZE)
 	{
-		p = i;
+		*p = i;
 		return true;
 	}
 	else
@@ -180,18 +174,18 @@ bool SearchContact(char *string, int p)
 
 void Guide()
 {
-	printf("what do you want to do?\n");
+	printf("\nwhat do you want to do?\n");
 	printf("1.show all contacts\n2.add from file\n3.export to file\n");
 	printf("4.search for contact\n5.build a new contact\n6.modify contact\n");
 	printf("7.delete contact\n8.exit\n");
 }
 
-int Hash(char *string)
+int Hashs(char *string)
 {
 	int sum = 0;
 	for (int i = 0; i < 20; i++)
 	{
-		sum += string[i];
+		sum += toascii(string[i]);
 	}
 	return sum % SIZE;
 }
