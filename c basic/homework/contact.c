@@ -87,7 +87,26 @@ int main(void)
 
 void AddFileContact()
 {
-	;
+	FILE *fp;
+	char ch;
+	if ((fp = fopen("import.txt", "r")) == NULL)
+	{
+		printf("failed to open this file!\n");
+		return;
+	}
+	while (!feof(fp))
+	{
+		fscanf(fp, "%s", &names);
+		int i = Hashs(names);
+		printf("%d\n", i);
+		printf("%s\n", names);
+		strcpy(contact[i].name, names);
+		fscanf(fp, "%s", &contact[i].phone);
+		fscanf(fp, "%s", &contact[i].address);
+		turn[Flag++] = i;
+	}
+	Flag--;
+	fclose(fp);
 }
 
 void ExportContact()
