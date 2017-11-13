@@ -7,14 +7,16 @@
 
 void Guide();
 void InitContact();
-void AddContact();
+void AddFileContact();
 void ExportContact();
 bool SearchContact(char *string, int *p);
 void NewContact();
-void ModifyContact();
-void DeleteContact();
+void DeleteContact(char *string);
 void ShowContact();
+void CollisionDeal(char *string, int i);
+void Modify(char *string);
 int Hashs(char *string);
+int Save();
 int turn[1009];
 int Flag = 0;
 char names[20];
@@ -48,7 +50,7 @@ int main(void)
 			ShowContact();
 			break;
 		case 2:
-			AddContact();
+			AddFileContact();
 			break;
 		case 3:
 			ExportContact();
@@ -67,11 +69,14 @@ int main(void)
 			NewContact();
 			break;
 		case 6:
-
-			ModifyContact();
+			printf("please input the name that you want to delete:\n");
+			scanf("%s", names);
+			DeleteContact(names);
 			break;
 		case 7:
-			DeleteContact();
+			printf("please input name that you want to modify:\n");
+			scanf("%s", names);
+			Modify(names);
 			break;
 		default:;
 		}
@@ -80,7 +85,7 @@ int main(void)
 	}
 }
 
-void AddContact()
+void AddFileContact()
 {
 	;
 }
@@ -92,52 +97,43 @@ void ExportContact()
 
 void NewContact()
 {
-	int i = 0;
-	printf("please input name:\n");
-	scanf("%s", names);
-	i = Hashs(names);
-	if (contact[i].phone[0] == '#')
+	if (Flag >= 1009)
 	{
-		turn[Flag++] = i;
-		strcpy(contact[i].name, names);
-		printf("please input phone:\n");
-		scanf("%s", &contact[i].phone);
-		printf("please input address:\n");
-		scanf("%s", &contact[i].address);
+		printf("it is full\n");
+		return;
 	}
-	else if (strcmp(contact[i].name, names) == 0)
-	{
-		char choose;
-		printf("the contact has existed,do you want to cover it? Y or N?\n");
-		scanf("%s", &choose);
-		if (choose == 'N')
-			return;
-		else if (choose == 'Y')
-		{
-			printf("please input phone:\n");
-			scanf("%s", &contact[i].phone);
-			printf("please input address:\n");
-			scanf("%s", &contact[i].address);
-		}
-	}
+	Save();
 }
 
-void DeleteContact()
+void DeleteContact(char *string)
 {
-	printf("please input the name that you want to delete:\n");
-	scanf("%s", names);
 	int temp;
-	if (SearchContact(names, &temp))
+	if (SearchContact(string, &temp))
 	{
 		memset(contact[temp].name, '\0', sizeof(contact[temp].name));
 		contact[temp].phone[0] = '#';
+		for (int i = 0; i < Flag; i++)
+		{
+			if (turn[i] == temp)
+			{
+				for (int k = i; k < Flag; k++)
+				{
+					turn[k] = turn[k + 1];
+					turn[k + 1] = turn[k + 2];
+				}
+			}
+		}
 		Flag--;
-		printf("delete finish\n");
 	}
 }
 
 void ShowContact()
 {
+	if (Flag == 0)
+	{
+		printf("it is empty!\n");
+		return;
+	}
 	for (int i = 0; i < Flag; i++)
 	{
 		int j = turn[i];
@@ -147,11 +143,6 @@ void ShowContact()
 			printf("*******************************************************************************\n");
 		}
 	}
-}
-
-void ModifyContact()
-{
-	;
 }
 
 bool SearchContact(char *string, int *p)
@@ -180,8 +171,8 @@ void Guide()
 {
 	printf("\nwhat do you want to do?\n");
 	printf("1.show all contacts\n2.add from file\n3.export to file\n");
-	printf("4.search for contact\n5.build a new contact\n6.modify contact\n");
-	printf("7.delete contact\n8.exit\n");
+	printf("4.search for contact\n5.modify or build a new contact\n");
+	printf("6.delete contact\n7.modify contact\n8.exit\n");
 }
 
 int Hashs(char *string)
@@ -199,5 +190,58 @@ void InitContact()
 	for (int i = 0; i < 1009; i++)
 	{
 		contact[i].phone[0] = '#';
+	}
+}
+
+void CollisionDeal(char *string, int i)
+{
+	i = Hashs(string);
+	int d = 1;
+	while (strcmp(contact[i].name, string) != 0 && d < SIZE)
+	{
+		i = (i + d) % SIZE;
+		d++;
+	}
+}
+
+int Save()
+{
+	int i = 0;
+	printf("please input name:\n");
+	scanf("%s", names);
+	i = Hashs(names);
+	//printf("i:%d\n",i);
+	if (contact[i].phone[0] == '#')
+	{
+		turn[Flag++] = i;
+		strcpy(contact[i].name, names);
+		printf("please input phone:\n");
+		scanf("%s", &contact[i].phone);
+		printf("please input address:\n");
+		scanf("%s", &contact[i].address);
+		return i;
+	}
+	else
+	{
+		printf("this contact has existed!\n");
+	}
+}
+
+void Modify(char *string)
+{
+	int temp;
+
+	if (SearchContact(string, &temp))
+	{
+		char choose;
+		printf("the contact has existed,do you want to modify it? Y or N?\n");
+		scanf("%s", &choose);
+		if (choose == 'N')
+			return;
+		else if (choose == 'Y')
+		{
+			DeleteContact(names);
+			Save();
+		}
 	}
 }
