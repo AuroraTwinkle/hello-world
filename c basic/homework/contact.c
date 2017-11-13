@@ -18,6 +18,7 @@ int Hashs(char *string);
 int turn[1009];
 int Flag = 0;
 char names[20];
+
 typedef struct contact
 {
 	char name[20];
@@ -58,9 +59,7 @@ int main(void)
 			scanf("%s", names);
 			if (SearchContact(names, &j))
 			{
-
 				printf("name:%s\tphonenumber:%s\taddress:%s\t\n", contact[j].name, contact[j].phone, contact[j].address);
-				printf("%d\n", j);
 				printf("*******************************************************************************\n");
 			}
 			break;
@@ -97,7 +96,6 @@ void NewContact()
 	printf("please input name:\n");
 	scanf("%s", names);
 	i = Hashs(names);
-	printf("i:%d\n", i);
 	if (contact[i].phone[0] == '#')
 	{
 		turn[Flag++] = i;
@@ -129,9 +127,12 @@ void DeleteContact()
 	printf("please input the name that you want to delete:\n");
 	scanf("%s", names);
 	int temp;
-	if (SearchContact(names, temp))
+	if (SearchContact(names, &temp))
 	{
+		memset(contact[temp].name, '\0', sizeof(contact[temp].name));
 		contact[temp].phone[0] = '#';
+		Flag--;
+		printf("delete finish\n");
 	}
 }
 
@@ -140,8 +141,11 @@ void ShowContact()
 	for (int i = 0; i < Flag; i++)
 	{
 		int j = turn[i];
-		printf("name:%s\tphonenumber:%s\taddress:%s\t\n", contact[j].name, contact[j].phone, contact[j].address);
-		printf("*******************************************************************************\n");
+		if (contact[j].phone[0] != '#')
+		{
+			printf("name:%s\tphonenumber:%s\taddress:%s\t\n", contact[j].name, contact[j].phone, contact[j].address);
+			printf("*******************************************************************************\n");
+		}
 	}
 }
 
