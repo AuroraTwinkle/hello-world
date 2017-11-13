@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <stdbool.h>
 #define SIZE 1009
 
 void Guide();
 void InitContact();
 void AddContact();
 void ExportContact();
-bool SearchContact(char *string);
+bool SearchContact(char *string, int p);
 void NewContact();
 void ModifyContact();
 void DeleteContact();
@@ -40,6 +42,8 @@ int main(void)
 		}
 		switch (choice)
 		{
+			char names[20];
+			int j;
 		case 1:
 			ShowContact();
 			break;
@@ -50,15 +54,22 @@ int main(void)
 			ExportContact();
 			break;
 		case 4:
-			char name[20];
+
 			printf("please input name that you want to search:\n");
-			scanf(("%s", name));
-			SearchContact(name);
+			scanf("%s", names);
+			if (SearchContact(names, j))
+			{
+
+				printf("name:%s\tphonenumber:%s\taddress:%s\t\n", contact[j].name, contact[j].phone, contact[j].address);
+				printf("%d\n", j);
+				printf("*******************************************************************************\n");
+			}
 			break;
 		case 5:
 			NewContact();
 			break;
 		case 6:
+
 			ModifyContact();
 			break;
 		case 7:
@@ -88,6 +99,7 @@ void NewContact()
 	printf("please input name:\n");
 	scanf("%s", name);
 	i = Hash(name);
+	printf("i:%d\n", i);
 	if (contact[i].phone[0] == '#')
 	{
 		turn[Flag++] = i;
@@ -118,10 +130,11 @@ void DeleteContact()
 {
 	char name[20];
 	printf("please input the name that you want to delete:\n");
-	sacnf("%s",name);
-	if(SearchContact(name))
+	scanf("%s", name);
+	int temp;
+	if (SearchContact(name, temp))
 	{
-		
+		contact[temp].phone[0] = '#';
 	}
 }
 
@@ -141,9 +154,28 @@ void ModifyContact()
 	;
 }
 
-void SearchContact(char *string)
+bool SearchContact(char *string, int p)
 {
-	;
+	int i = Hash(string);
+	int d = 1;
+	printf("%d\n", i);
+	//printf("%d\n",strcmp(contact[i].name,string));
+	//printf("%s\t%s\t",contact[i].name,string);
+	while (strcmp(contact[i].name, string) != 0 && d < SIZE)
+	{
+		i = (i + d) % SIZE;
+		d++;
+	}
+	if (d < SIZE)
+	{
+		p = i;
+		return true;
+	}
+	else
+	{
+		printf("the contact don't exist\n");
+		return false;
+	}
 }
 
 void Guide()
@@ -171,4 +203,3 @@ void InitContact()
 		contact[i].phone[0] = '#';
 	}
 }
-1
