@@ -1,25 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <stdbool.h>
 #define SIZE 1009
 
-void Guide();
-void InitContact();
-void AddFileContact();
-void ExportContact();
-bool SearchContact(char *string, int *p);
+void Guide();							  //开始界面
+void InitContact();						  //初始化联系人数组
+void AddFileContact();					  //从文件导入
+void ExportContact();					  //导出到文件
+bool SearchContact(char *string, int *p); //查找函数
 void NewContact();
-void DeleteContact(char *string);
-void ShowContact();
-void CollisionDeal(char *string, int i);
-void Modify(char *string);
-int Hashs(char *string);
-int Save();
-int turn[1009];
-int Flag = 0;
-char names[20];
+void DeleteContact(char *string);		 //删除函数
+void ShowContact();						 //展示联系人
+void CollisionDeal(char *string, int i); //冲突处理
+void Modify(char *string);				 //修改联系人
+int Hashs(char *string);				 //哈希函数
+bool Save();
+int turn[1009]; //用来存储由哈希函数获得的地址方便遍历
+int Flag = 0;   //该全局变量用来记录当前联系人数量
+char names[20]; //用来存储从键盘获取的临时数据
 
 typedef struct contact
 {
@@ -28,7 +27,7 @@ typedef struct contact
 	char address[50];
 } Contact;
 
-Contact contact[SIZE];
+Contact contact[SIZE]; //全局数组，电话本容量
 
 int main(void)
 {
@@ -64,6 +63,11 @@ int main(void)
 				printf("name:%s\tphonenumber:%s\taddress:%s\t\n", contact[j].name, contact[j].phone, contact[j].address);
 				printf("*******************************************************************************\n");
 			}
+			else
+			{
+				printf("the contact don't exist\n");
+				printf("if you want to add it,please input \"5\"\n");
+			}
 			break;
 		case 5:
 			NewContact();
@@ -88,7 +92,7 @@ int main(void)
 void AddFileContact()
 {
 	FILE *fp;
-	char ch;
+	char ch[20];
 	if ((fp = fopen("import.txt", "r")) == NULL)
 	{
 		printf("failed to open this file!\n");
@@ -96,12 +100,21 @@ void AddFileContact()
 	}
 	while (!feof(fp))
 	{
+		int j = 0;
 		fscanf(fp, "%s", &names);
-		int i = Hashs(names);
-		strcpy(contact[i].name, names);
-		fscanf(fp, "%s", &contact[i].phone);
-		fscanf(fp, "%s", &contact[i].address);
-		turn[Flag++] = i;
+		if (!SearchContact(names, &j))
+		{
+			int i = Hashs(names);
+			strcpy(contact[i].name, names);
+			fscanf(fp, "%s", &contact[i].phone);
+			fscanf(fp, "%s", &contact[i].address);
+			turn[Flag++] = i;
+		}
+		else
+		{
+			fscanf(fp, "%s", &ch);
+			fscanf(fp, "%s", &ch);
+		}
 	}
 	fclose(fp);
 	printf("success!\n");
@@ -208,7 +221,6 @@ bool SearchContact(char *string, int *p)
 	}
 	else
 	{
-		printf("the contact don't exist\n");
 		return false;
 	}
 }
@@ -250,14 +262,19 @@ void CollisionDeal(char *string, int i)
 	}
 }
 
-int Save()
+bool Save()
 {
-	int i = 0;
+	int i = 0, j;
 	printf("please input name:\n");
 	scanf("%s", names);
 	i = Hashs(names);
+	if (SearchContact(names, &j))
+	{
+		printf("this contact has existed!\nyou can input \"7\" to modify it.\n");
+		return false;
+	}
 	//printf("i:%d\n",i);
-	if (contact[i].phone[0] == '#')
+	else if (contact[i].phone[0] == '#')
 	{
 		turn[Flag++] = i;
 		strcpy(contact[i].name, names);
@@ -265,11 +282,8 @@ int Save()
 		scanf("%s", &contact[i].phone);
 		printf("please input address:\n");
 		scanf("%s", &contact[i].address);
-		return i;
-	}
-	else
-	{
-		printf("this contact has existed!\n");
+		printf("success!\n");
+		return true;
 	}
 }
 
