@@ -137,7 +137,7 @@ void ExportContact()
 		}
 		fprintf(fp, "%s", "\n");
 	}
-
+	printf("success!\n");
 	fclose(fp);
 }
 
