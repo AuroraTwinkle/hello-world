@@ -98,14 +98,13 @@ void AddFileContact()
 	{
 		fscanf(fp, "%s", &names);
 		int i = Hashs(names);
-		printf("%d\n", i);
-		printf("%s\n", names);
 		strcpy(contact[i].name, names);
 		fscanf(fp, "%s", &contact[i].phone);
 		fscanf(fp, "%s", &contact[i].address);
 		turn[Flag++] = i;
 	}
 	fclose(fp);
+	printf("success!\n");
 }
 
 void ExportContact()
@@ -218,7 +217,7 @@ void Guide()
 {
 	printf("\nwhat do you want to do?\n");
 	printf("1.show all contacts\n2.add from file\n3.export to file\n");
-	printf("4.search for contact\n5.modify or build a new contact\n");
+	printf("4.search for contact\n5.build a new contact\n");
 	printf("6.delete contact\n7.modify contact\n8.exit\n");
 }
 
