@@ -45,4 +45,5 @@ void Maze::SetMazeSize()
 	}
 	if (MazeSize.cx % 2 == 0)MazeSize.cx++;
 	if (MazeSize.cy % 2 == 0)MazeSize.cy++;
+
 }
