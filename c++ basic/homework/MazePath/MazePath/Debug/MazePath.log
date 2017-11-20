@@ -1,3 +1,4 @@
-﻿  main.cpp
-  MazePath.vcxproj -> F:\hello-world\c++ basic\homework\MazePath\Debug\MazePath.exe
-  MazePath.vcxproj -> F:\hello-world\c++ basic\homework\MazePath\Debug\MazePath.pdb (Full PDB)
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (MazePath.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Maze.cpp
+  MazePath.vcxproj -> F:\hello-world\c++ basic\homework\MazePath\Debug\Maze.exe
+  MazePath.vcxproj -> F:\hello-world\c++ basic\homework\MazePath\Debug\Maze.pdb (Full PDB)
