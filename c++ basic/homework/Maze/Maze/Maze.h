@@ -37,7 +37,8 @@ public:
 	//static std::default_random_engine direct;
 private:
 	SIZE MazeSize;//√‘π¨≥ﬂ¥Á
-	RECT seeSight;
+	RECT seeSight;// ”“∞
+	POINT Player;
 	stack <POINT> PathStack;//¬∑æ∂’ª	
 	int dir[4][2] = { { -1,0 },{ 1,0 },{ 0,-1 },{ 0,1 } };
 };

@@ -1,8 +1,8 @@
 #include "Maze.h"
 
-IMAGE mazeItem(100, 20);//加载地图元素
-IMAGE mazeSight(430, 380);
-
+IMAGE mazeItem(200, 20);//加载地图元素
+IMAGE mazeSight(360, 280);
+IMAGE Photo(20, 20);
 Maze::Maze()
 {
 
@@ -18,7 +18,7 @@ void Maze::HelloWorld()
 	for (int i = 0; i<128; i++)
 	{
 		setlinecolor(RGB((127 - i) <<1, 2 * (127 - i) >> 1, (127 - i) <<1));
-		rectangle(80 - i, 60 - (2*i >> 1), 550 + i, 440 + (2*i >> 1));
+		rectangle(149 - i, 109 - (i >> 1), 490 + i, 370 + (i >> 1));
 	}//边框
 	settextcolor(WHITE);
 	setbkmode(TRANSPARENT);//透明背景
@@ -44,46 +44,62 @@ void Maze::InitGame()
 	SetMazeSize();
 	seeSight.left = 0;
 	seeSight.top = 0;
-	seeSight.right = 19;
-	seeSight.bottom = 17;
+	seeSight.right = 17;
+	seeSight.bottom = 13;
+	Player.x = 2;
+	Player.y = 2;
 	CreatMaze(MazeSize.cx, MazeSize.cy);
 	Draw();
 }
 
-void Maze::CreatMaze(int Height, int Width)
+void Maze::CreatMaze(int Width, int Height)
 {
 	if (Height % 2 == 0 || Width % 2 == 0)
 		return;
 
-	MazeMap = new int*[Height + 2];
+	MazeMap = new int*[Width + 2];
 	IsVisit = new bool*[Height + 2];
-	for (int x = 0; x < Height + 2; x++)
+	for (int x = 0; x < Width + 2; x++)
 	{
-		MazeMap[x] = new int[Width + 2];
+		MazeMap[x] = new int[Height + 2];
 		IsVisit[x] = new bool[Width + 2];
 		memset(IsVisit[x], false, sizeof(IsVisit[x]));//初始化为未被访问
-		memset(MazeMap[x], WALL, sizeof(MazeMap[x]));//将数组全部初始化为墙壁
+		memset(MazeMap[x], WALL, (Height+2)*sizeof(int));//将数组全部初始化为墙壁
 	}
 	//定义边界
 	for (int i = 0; i <= Width + 1; i++)
 	{
-		MazeMap[0][i] = BORDER;
-		MazeMap[Height + 1][i] = BORDER;
+		MazeMap[i][0] = ROAD;
+		MazeMap[i][Height + 1] = ROAD;
+		
+	}
+	for (int i = 1; i <= Height; i++)
+	{
+		MazeMap[0][i] = ROAD;
+		MazeMap[Width+1][i] = ROAD;
+	}
+	MazeMap[1][2] = ENTRANCE;//定义入口
+	
+	MazeMap[Height - 1][Width - 1] = EXIT;//定义出口
+	//TravelMakeMap(((rand() % (Width - 1)) & 0xfffe) + 2, ((rand() % (Height - 1)) & 0xfffe) + 2);
+	
+	POINT entrance;
+	entrance.x = 2;
+	entrance.y = 2;
+	stack <POINT> path;
+	BFS(entrance, path);
+	for (int i = 0; i <= Width + 1; i++)
+	{
+		MazeMap[i][0] = BORDER;
+		MazeMap[i][Height + 1] = BORDER;
+		cout << MazeMap[i][0];
 	}
 	for (int i = 1; i <= Height; i++)
 	{
 		MazeMap[0][i] = BORDER;
 		MazeMap[Width + 1][i] = BORDER;
 	}
-	MazeMap[1][1] = ENTRANCE;//定义入口
-	IsVisit[1][1] = true;
-	MazeMap[Height - 1][Width - 1] = EXIT;//定义出口
-	IsVisit[Height - 1][Width - 1] = true;
-	POINT entrance;
-	entrance.x = 1;
-	entrance.y = 1;
-	stack <POINT> path;
-	BFS(entrance, path);
+	
 
 }
 
@@ -151,18 +167,19 @@ void Maze::BFS(POINT now, stack <POINT> &path)//深度优先搜索
 		nextNode = notVisitNodes[ran];
 		int x = nextNode.x;
 		int y = nextNode.y;
-		if (IsVisit[x][y])
-		{
-			now = path.top();
-			path.pop();		
-		}
-		else
+		if (MazeMap[x][y] == WALL)
 		{
 			path.push(nextNode);
 			IsVisit[x][y] = true;
 			MazeMap[x][y] = ROAD;
 			MazeMap[(now.x + x) / 2][(now.y + y) / 2] = ROAD;
 			now = nextNode;
+			
+		}
+		else
+		{
+			now = path.top();
+			path.pop();
 		}
 
 	}
@@ -170,20 +187,26 @@ void Maze::BFS(POINT now, stack <POINT> &path)//深度优先搜索
 
 void Maze::Draw()
 {
-	int x, y,k=0;
+	int x, y;
 	SetWorkingImage(&mazeSight);
-	for (int i = seeSight.left+1; i < seeSight.right; i++) 
+	for (int i = seeSight.left; i < seeSight.right; i++) 
 	{
-		for (int j = seeSight.top+1; j < seeSight.bottom; j++)
+		for (int j = seeSight.top; j < seeSight.bottom; j++)
 		{
 			x = (i - seeSight.left)*20;
 			y = (j - seeSight.top)*20;
 			putimage(x, y, 20,20,&mazeItem,getMazeItem(i,j),0);
+			//cout << getMazeItem(i, j)<<"\t";
 		}
+		//cout << endl;
 	}
+	x = (Player.x - seeSight.left) * 20;
+	y = (Player.y - seeSight.top) * 20;
+	putimage(x, y, 20, 20, &mazeItem, PLAYER, 0);
 		
 	SetWorkingImage();
-	putimage(81, 61, 430, 380, &mazeSight, 10, 10);
+	putimage(150, 110, 340, 260, &mazeSight, 10, 10);
+
 }
 
 MazeItem Maze::getMazeItem(int x, int y)
@@ -193,15 +216,44 @@ MazeItem Maze::getMazeItem(int x, int y)
 
 void Maze::loadImage()
 {
+	
 	SetWorkingImage(&mazeItem);
 	cleardevice();
-	setorigin(WALL, 0);
+	//玩家
+	loadimage(&Photo,_T("timg.jpg"),20,20, true);
+
+	setorigin(PLAYER, 0);
+	setfillstyle(BS_DIBPATTERN, NULL, &Photo);
+	solidrectangle(0, 0, 19, 19);
 	
+
+	//墙壁
+	setorigin(WALL, 0);
 	setlinecolor(LIGHTMAGENTA);
 	setfillstyle((BYTE*)"\x4a\x2d\x66\x4b\xa5\xa2\x69\x54");
 	settextcolor(LIGHTMAGENTA);
 	solidrectangle(1, 1, 19, 19);
 	rectangle(0, 0, 20, 20);
+	//边框
+	setorigin(BORDER, 0);
+	settextcolor(WHITE);
+	setfillstyle((BYTE*)"\x50\x55\x25\xa0\x05\x55\x22\x02");
+	solidrectangle(0, 0, 19, 19);
+	//入口
+	setorigin(ENTRANCE, 0);
+	settextcolor(WHITE);
+	setfillcolor(WHITE);
+	setfillstyle(2,5);
+	solidrectangle(1, 1, 19, 19);
+	//出口
+	setorigin(EXIT, 0);
+	settextcolor(WHITE);
+	setfillstyle(2, 5);
+	solidrectangle(1, 1, 19, 19);
+
+	setorigin(0, 0);
+
+
 }
 
 vector<POINT> Maze::notVisitNode(POINT now)
@@ -213,7 +265,7 @@ vector<POINT> Maze::notVisitNode(POINT now)
 		int y = now.y + 2 * dir[i][1];
 		if (x > 0 && x < MazeSize.cx + 1 && y>0 && y < MazeSize.cy + 1)
 		{
-			if (!IsVisit[x][y])
+			if (MazeMap[x][y]==WALL)
 			{
 				POINT node;
 				node.x = x;
