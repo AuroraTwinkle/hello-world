@@ -29,13 +29,14 @@ void Maze::HelloWorld()
 	outtextxy(0, 402, _T("方向键移动 "));
 	outtextxy(0, 420, _T("ESC：退出"));
 	outtextxy(0, 440, _T("回车：自动寻路"));
+	outtextxy(0, 460, _T("C:清除路标 空格:路标"));
 }
 
 void Maze::InitGame()
 {
 	initgraph(640, 480, SHOWCONSOLE);//打开一个图形窗口
 	HelloWorld();
-	SetMazeSize();
+	
 	if (MazeMap != NULL)
 	{
 		for (int x = 0; x < MazeSize.cx + 2; x++)
@@ -44,6 +45,7 @@ void Maze::InitGame()
 		}
 		delete[] MazeMap;
 	}
+	SetMazeSize();
 	//视野范围
 	seeSight.left = 0;
 	seeSight.top = 0;
@@ -294,8 +296,22 @@ void Maze::StartPlay()
 		
 		Move(c);
 		Draw();
+		if (arriveExit())
+		{
+			break;
+		}
 		Sleep(100);
 	}
+	//回收内存
+	if (MazeMap != NULL)
+	{
+		for (int x = 0; x < MazeSize.cx + 2; x++)
+		{
+			delete[] MazeMap[x];
+		}
+		delete[] MazeMap;
+	}
+	closegraph();
 }
 
 int Maze::GetKey()
@@ -331,6 +347,24 @@ int Maze::GetKey()
 	}
 
 	return cmd;
+}
+
+bool Maze::arriveExit()
+{
+	if (Player.x == MazeSize.cx - 1 && MazeSize.cy == Player.y)
+	{
+		HWND hwnd = GetHWnd();
+		if (MessageBox(hwnd, TEXT("您已到达终点，是否再来一局？"), TEXT("大吉大利，今晚吃鸡"), MB_ICONQUESTION | MB_YESNO) == IDYES)
+		{
+			InitGame();
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 MazeItem Maze::getMazeItem(int x, int y)
@@ -371,12 +405,14 @@ void Maze::loadImage()
 	solidrectangle(1, 1, 19, 19);
 	//出口
 	setorigin(EXIT, 0);
-	settextcolor(WHITE);
+	settextcolor(RED);
+	setfillcolor(RED);
 	setfillstyle(2, 5);
 	solidrectangle(1, 1, 19, 19);
 	//路标
 	setorigin(ROADMARK, 0);
 	settextcolor(WHITE);
+	setfillcolor(WHITE);
 	setfillstyle(0);
 	solidrectangle(1, 1, 19, 19);
 	setlinecolor(WHITE);

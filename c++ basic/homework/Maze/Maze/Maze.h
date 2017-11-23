@@ -45,6 +45,7 @@ public:
 	void Move(int c);//玩家移动函数
 	void StartPlay();//游戏主循环
 	int GetKey();//捕获用户命令
+	bool arriveExit();//判断是否到达出口
 	MazeItem getMazeItem(int x, int y);
 	void loadImage();
 	vector<POINT> notVisitNode(POINT now);
