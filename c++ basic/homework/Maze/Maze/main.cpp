@@ -5,8 +5,33 @@ int main()
 	Maze maze;
 	maze.loadImage();
 	maze.InitGame();
+	maze.StartPlay();	
 	getchar();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //#include <graphics.h>
 //#include <time.h>

@@ -16,7 +16,17 @@ enum MazeItem
 	ENTRANCE = 60,
 	EXIT = 80,
 	BORDER = 100
-};//枚举常用迷宫元素
+};//枚举迷宫元素
+enum Command
+{
+	UP_OK = 14,
+	DOWN_OK = 2,
+	LEFT_OK=4,
+	RIGHT_OK=6,
+	QUIT_OK=8,
+	MARK_OK=10,
+	CLEARMARK_OK=12
+};
 class Maze
 {
 public:
@@ -30,7 +40,10 @@ public:
 	void BFS(POINT pos, stack <POINT> &path);//深度优先搜索
 	int** MazeMap = NULL;//二维数组用来存储迷宫地图
 	bool** IsVisit = NULL;//标记访问过的点
-	void Draw();
+	void Draw();//绘制迷宫中的元素
+	void Move(int c);//玩家移动函数
+	void StartPlay();//游戏主循环
+	int GetKey();//捕获用户命令
 	MazeItem getMazeItem(int x, int y);
 	void loadImage();
 	vector<POINT> notVisitNode(POINT now);

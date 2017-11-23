@@ -1,8 +1,8 @@
 #include "Maze.h"
 
 IMAGE mazeItem(200, 20);//加载地图元素
-IMAGE mazeSight(360, 280);
-IMAGE Photo(20, 20);
+IMAGE mazeSight(360, 280);//绘制迷宫
+IMAGE Photo(20, 20);//存放文件加载的图片
 Maze::Maze()
 {
 
@@ -15,11 +15,6 @@ Maze::~Maze()
 
 void Maze::HelloWorld()
 {
-	for (int i = 0; i<128; i++)
-	{
-		setlinecolor(RGB((127 - i) <<1, 2 * (127 - i) >> 1, (127 - i) <<1));
-		rectangle(149 - i, 109 - (i >> 1), 490 + i, 370 + (i >> 1));
-	}//边框
 	settextcolor(WHITE);
 	setbkmode(TRANSPARENT);//透明背景
 
@@ -31,10 +26,9 @@ void Maze::HelloWorld()
 	settextcolor(YELLOW);
 	settextstyle(16, 0, _T("黑体"));
 	outtextxy(0, 382, _T("操作说明："));
-	outtextxy(0, 402, _T("方向键或 "));
-	outtextxy(0, 420, _T("ASDW移动"));
-	outtextxy(0, 440, _T("ESC：退出"));
-	outtextxy(0, 460, _T("回车：自动寻路"));
+	outtextxy(0, 402, _T("方向键移动 "));
+	outtextxy(0, 420, _T("ESC：退出"));
+	outtextxy(0, 440, _T("回车：自动寻路"));
 }
 
 void Maze::InitGame()
@@ -42,6 +36,15 @@ void Maze::InitGame()
 	initgraph(640, 480, SHOWCONSOLE);//打开一个图形窗口
 	HelloWorld();
 	SetMazeSize();
+	if (MazeMap != NULL)
+	{
+		for (int x = 0; x < MazeSize.cx + 2; x++)
+		{
+			delete[] MazeMap[x];
+		}
+		delete[] MazeMap;
+	}
+	//视野范围
 	seeSight.left = 0;
 	seeSight.top = 0;
 	seeSight.right = 17;
@@ -63,7 +66,7 @@ void Maze::CreatMaze(int Width, int Height)
 	{
 		MazeMap[x] = new int[Height + 2];
 		IsVisit[x] = new bool[Width + 2];
-		memset(IsVisit[x], false, sizeof(IsVisit[x]));//初始化为未被访问
+		//memset(IsVisit[x], false, sizeof(IsVisit[x]));//初始化为未被访问
 		memset(MazeMap[x], WALL, (Height+2)*sizeof(int));//将数组全部初始化为墙壁
 	}
 	//定义边界
@@ -207,6 +210,117 @@ void Maze::Draw()
 	SetWorkingImage();
 	putimage(150, 110, 340, 260, &mazeSight, 10, 10);
 
+}
+
+void Maze::Move(int c)
+{
+	//左移
+	if (c & LEFT_OK)
+	{
+		if (Player.x > 1 && MazeMap[Player.x - 1][Player.y] != WALL && MazeMap[Player.x - 1][Player.y] != ENTRANCE)
+		{
+			Player.x--;
+			if (seeSight.left > 0 && Player.x - seeSight.top < 4)
+			{
+				seeSight.left--;
+				seeSight.right--;
+			}
+		}
+		
+	}
+		
+	//下移
+	if (c & DOWN_OK) 
+	{
+		if (Player.y < MazeSize.cy && MazeMap[Player.x][Player.y + 1] != WALL)
+		{
+			Player.y++;
+			if (seeSight.bottom <= MazeSize.cy && seeSight.bottom - Player.y < 4)
+			{
+				seeSight.top++;
+				seeSight.bottom++;
+			}
+		}
+	}
+	
+	//上移
+	if (c & UP_OK)
+	{
+		if (Player.y > 1 && MazeMap[Player.x][Player.y - 1] != WALL)
+		{
+			Player.y--;
+			if (seeSight.top > 0 && Player.y - seeSight.top < 4)
+			{
+				seeSight.bottom--;
+				seeSight.top--;
+			}
+		}
+	}
+
+	//右移
+	if (c & RIGHT_OK)
+	{
+		if (Player.x < MazeSize.cx && MazeMap[Player.x + 1][Player.y] != WALL)
+		{
+			Player.x++;
+			if (seeSight.right <= MazeSize.cx && seeSight.right - Player.x < 4)
+			{
+				seeSight.right++;
+				seeSight.left++;
+			}
+		}
+	}
+	
+}
+
+
+
+void Maze::StartPlay()
+{
+	int c = 0;
+	
+	while (c = GetKey())
+	{
+		
+		Move(c);
+		Draw();
+		Sleep(100);
+	}
+}
+
+int Maze::GetKey()
+{
+	int cmd = 0;
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	{
+		cmd |= DOWN_OK;
+	}
+	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	{
+		cmd |= UP_OK;
+	}
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	{
+		cmd |= LEFT_OK;
+	}
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	{
+		cmd |= RIGHT_OK;
+	}
+	if (GetAsyncKeyState(' ') & 0x8000)
+	{
+		cmd |= MARK_OK;
+	}
+	if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+	{
+		cmd |= QUIT_OK;
+	}
+	if (GetAsyncKeyState('C') & 0x8000)
+	{
+		cmd |= CLEARMARK_OK;
+	}
+
+	return cmd;
 }
 
 MazeItem Maze::getMazeItem(int x, int y)
