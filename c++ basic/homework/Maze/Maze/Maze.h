@@ -15,7 +15,8 @@ enum MazeItem
 	ROAD = 40,
 	ENTRANCE = 60,
 	EXIT = 80,
-	BORDER = 100
+	BORDER = 100,
+	ROADMARK = 120
 };//รถพูรินฌิชหุ
 enum Command
 {

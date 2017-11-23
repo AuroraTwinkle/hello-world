@@ -83,19 +83,19 @@ void Maze::CreatMaze(int Width, int Height)
 	}
 	MazeMap[1][2] = ENTRANCE;//定义入口
 	
-	MazeMap[Height - 1][Width - 1] = EXIT;//定义出口
+	MazeMap[Height - 1][Width] = EXIT;//定义出口
 	//TravelMakeMap(((rand() % (Width - 1)) & 0xfffe) + 2, ((rand() % (Height - 1)) & 0xfffe) + 2);
 	
 	POINT entrance;
-	entrance.x = 2;
-	entrance.y = 2;
+	entrance.x = 20;
+	entrance.y = 20;
 	stack <POINT> path;
 	BFS(entrance, path);
 	for (int i = 0; i <= Width + 1; i++)
 	{
 		MazeMap[i][0] = BORDER;
 		MazeMap[i][Height + 1] = BORDER;
-		cout << MazeMap[i][0];
+		cout << MazeMap[i][Height+1];
 	}
 	for (int i = 1; i <= Height; i++)
 	{
@@ -158,8 +158,6 @@ void Maze::BFS(POINT now, stack <POINT> &path)//深度优先搜索
 	{
 		
 		vector<POINT> notVisitNodes = notVisitNode(now);
-		//int ran = notVisitNodes.size();
-		//uniform_int_distribution<time_t> RandomEngine1(0,ran);
 		if (notVisitNodes.empty())
 		{
 			now = path.top();
@@ -192,9 +190,9 @@ void Maze::Draw()
 {
 	int x, y;
 	SetWorkingImage(&mazeSight);
-	for (int i = seeSight.left; i < seeSight.right; i++) 
+	for (int i = seeSight.left; i <= seeSight.right; i++) 
 	{
-		for (int j = seeSight.top; j < seeSight.bottom; j++)
+		for (int j = seeSight.top; j <= seeSight.bottom; j++)
 		{
 			x = (i - seeSight.left)*20;
 			y = (j - seeSight.top)*20;
@@ -215,12 +213,12 @@ void Maze::Draw()
 void Maze::Move(int c)
 {
 	//左移
-	if (c & LEFT_OK)
+	if (c == LEFT_OK)
 	{
 		if (Player.x > 1 && MazeMap[Player.x - 1][Player.y] != WALL && MazeMap[Player.x - 1][Player.y] != ENTRANCE)
 		{
 			Player.x--;
-			if (seeSight.left > 0 && Player.x - seeSight.top < 4)
+			if (seeSight.left > 0 && Player.x - seeSight.left < 5)
 			{
 				seeSight.left--;
 				seeSight.right--;
@@ -230,7 +228,7 @@ void Maze::Move(int c)
 	}
 		
 	//下移
-	if (c & DOWN_OK) 
+	if (c == DOWN_OK) 
 	{
 		if (Player.y < MazeSize.cy && MazeMap[Player.x][Player.y + 1] != WALL)
 		{
@@ -244,7 +242,7 @@ void Maze::Move(int c)
 	}
 	
 	//上移
-	if (c & UP_OK)
+	if (c == UP_OK)
 	{
 		if (Player.y > 1 && MazeMap[Player.x][Player.y - 1] != WALL)
 		{
@@ -258,7 +256,7 @@ void Maze::Move(int c)
 	}
 
 	//右移
-	if (c & RIGHT_OK)
+	if (c == RIGHT_OK)
 	{
 		if (Player.x < MazeSize.cx && MazeMap[Player.x + 1][Player.y] != WALL)
 		{
@@ -270,6 +268,18 @@ void Maze::Move(int c)
 			}
 		}
 	}
+
+	//做标记
+	if (c == MARK_OK)
+	{
+		MazeMap[Player.x][Player.y] = ROADMARK;
+	}
+
+	//清除路标
+	if (c == CLEARMARK_OK)
+	{
+		MazeMap[Player.x][Player.y] = ROAD;
+	}
 	
 }
 
@@ -279,7 +289,7 @@ void Maze::StartPlay()
 {
 	int c = 0;
 	
-	while (c = GetKey())
+	while (!((c = GetKey())==QUIT_OK))
 	{
 		
 		Move(c);
@@ -364,6 +374,13 @@ void Maze::loadImage()
 	settextcolor(WHITE);
 	setfillstyle(2, 5);
 	solidrectangle(1, 1, 19, 19);
+	//路标
+	setorigin(ROADMARK, 0);
+	settextcolor(WHITE);
+	setfillstyle(0);
+	solidrectangle(1, 1, 19, 19);
+	setlinecolor(WHITE);
+	rectangle(0, 0, 20, 20);
 
 	setorigin(0, 0);
 

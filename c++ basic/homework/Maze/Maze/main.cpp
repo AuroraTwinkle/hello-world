@@ -2,11 +2,14 @@
 
 int main()
 {
-	Maze maze;
+	/*Maze maze;
 	maze.loadImage();
 	maze.InitGame();
-	maze.StartPlay();	
-	getchar();
+	maze.StartPlay();	*/
+	HWND WW = GetHWnd();
+	MessageBox(WW, TEXT("Hello world!"),TEXT("CUOWU"), MB_ICONINFORMATION | MB_YESNO);
+	
+
 }
 
 
