@@ -32,20 +32,22 @@ class Maze
 {
 public:
 	Maze();
-	virtual ~Maze();
+	~Maze();
 	void HelloWorld();//开始界面
 	void InitGame();//初始化游戏数据，包括地图，人物等
 	void CreatMaze(int Height, int Width);//创建迷宫
 	void SetMazeSize();//设置迷宫大小
-	void TravelMakeMap(int x,int y);//通过遍历生成迷宫
-	void BFS(POINT pos, stack <POINT> &path);//深度优先搜索
+	//void TravelMakeMap(int x,int y);//通过遍历生成迷宫
+	void BFS(POINT pos, stack <POINT> path);//深度优先遍历产生随机迷宫
 	int** MazeMap = NULL;//二维数组用来存储迷宫地图
 	bool** IsVisit = NULL;//标记访问过的点
 	void Draw();//绘制迷宫中的元素
 	void Move(int c);//玩家移动函数
+	void AutoFindPath();//自动寻路
 	void StartPlay();//游戏主循环
 	int GetKey();//捕获用户命令
 	bool arriveExit();//判断是否到达出口
+	bool Quit();//询问用户是否确认退出
 	MazeItem getMazeItem(int x, int y);
 	void loadImage();
 	vector<POINT> notVisitNode(POINT now);

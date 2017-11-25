@@ -1,9 +1,10 @@
 #include "Maze.h"
 
-void main()
+int main()
 {
 	Maze maze;
 	maze.loadImage();
 	maze.InitGame();
 	maze.StartPlay();
+	
 }

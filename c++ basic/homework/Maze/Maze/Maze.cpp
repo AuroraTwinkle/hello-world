@@ -128,30 +128,26 @@ void Maze::SetMazeSize()//从用户的输入获取迷宫的大小
 
 }
 
-void Maze::TravelMakeMap(int x,int y)
-{
-	int d[4][2] = { 0, 1, 1, 0, 0, -1, -1, 0 };
+//void Maze::TravelMakeMap(int x,int y)
+//{
+//	int d[4][2] = { 0, 1, 1, 0, 0, -1, -1, 0 };
+//	int n, t, i;
+//	for (i = 0; i < 4; i++)
+//	{
+//		n = rand() % 4;
+//		t = d[i][0], d[i][0] = d[n][0], d[n][0] = t;
+//		t = d[i][1], d[i][1] = d[n][1], d[n][1] = t;
+//	}
+//	MazeMap[x][y] = ROAD;
+//	for (i = 0; i < 4; i++)
+//		if (MazeMap[x + 2 * d[i][0]][y + 2 * d[i][1]] == WALL)
+//		{
+//			MazeMap[x + d[i][0]][y + d[i][1]] = ROAD;
+//			TravelMakeMap(x + d[i][0] * 2, y + d[i][1] * 2); 
+//		}
+//}
 
-	// 将遍历方向乱序
-	int n, t, i;
-	for (i = 0; i < 4; i++)
-	{
-		n = rand() % 4;
-		t = d[i][0], d[i][0] = d[n][0], d[n][0] = t;
-		t = d[i][1], d[i][1] = d[n][1], d[n][1] = t;
-	}
-
-	// 尝试周围四个方向
-	MazeMap[x][y] = ROAD;
-	for (i = 0; i < 4; i++)
-		if (MazeMap[x + 2 * d[i][0]][y + 2 * d[i][1]] == WALL)
-		{
-			MazeMap[x + d[i][0]][y + d[i][1]] = ROAD;
-			TravelMakeMap(x + d[i][0] * 2, y + d[i][1] * 2);       // 递归
-		}
-}
-
-void Maze::BFS(POINT now, stack <POINT> &path)//深度优先搜索
+void Maze::BFS(POINT now, stack <POINT> path)//深度优先搜索
 {
 	path.push(now);
 	POINT nextNode;
@@ -205,7 +201,7 @@ void Maze::Draw()
 	}
 	x = (Player.x - seeSight.left) * 20;
 	y = (Player.y - seeSight.top) * 20;
-	putimage(x, y, 20, 20, &mazeItem, PLAYER, 0);
+	putimage(x, y, 20, 20, &mazeItem, PLAYER, 0);//玩家
 		
 	SetWorkingImage();
 	putimage(150, 110, 340, 260, &mazeSight, 10, 10);
@@ -285,19 +281,33 @@ void Maze::Move(int c)
 	
 }
 
+void Maze::AutoFindPath()
+{
+	stack <POINT> Path;
+	POINT now, nextNode;
+	now.x = 1;
+	now.y = 2;
+	Path.push(now);
+	while (!Path.empty())
+	{
+
+	}
+}
+
 
 
 void Maze::StartPlay()
 {
 	int c = 0;
 	
-	while (!((c = GetKey())==QUIT_OK))
+	while (!(((c = GetKey())==QUIT_OK) && Quit()))
 	{
 		
 		Move(c);
 		Draw();
 		if (arriveExit())
 		{
+			
 			break;
 		}
 		Sleep(100);
@@ -367,6 +377,14 @@ bool Maze::arriveExit()
 	return false;
 }
 
+bool Maze::Quit()
+{
+	HWND hwnd = GetHWnd();
+	if (MessageBox(hwnd, TEXT("您是否要退出游戏？"), TEXT("注意"), MB_ICONQUESTION | MB_YESNO) == IDYES)
+		return true;
+	return false;
+}
+
 MazeItem Maze::getMazeItem(int x, int y)
 {
 	return (MazeItem)MazeMap[x][y];
@@ -416,7 +434,7 @@ void Maze::loadImage()
 	setfillstyle(0);
 	solidrectangle(1, 1, 19, 19);
 	setlinecolor(WHITE);
-	rectangle(0, 0, 20, 20);
+	//rectangle(1, 1, 10, 10);挖坑：使用这句会出现错误，玄学，不知道为什么
 
 	setorigin(0, 0);
 
