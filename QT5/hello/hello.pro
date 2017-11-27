@@ -13,8 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    newspaper.cpp \
+    reader.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    newspaper.h \
+    reader.h
 
 FORMS    += mainwindow.ui
+
+QMAKE_CXXFLAGS += -std=c++0x

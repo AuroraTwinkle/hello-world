@@ -1,12 +1,17 @@
-#include "mainwindow.h"
-#include <QApplication>
-#include <QLabel>
+
+#include <QCoreApplication>
+
+#include "newspaper.h"
+#include "reader.h"
+
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    QLabel *la=new QLabel("hello.world");
-    la->show();
+    QCoreApplication app(argc, argv);
 
+    Newspaper newspaper("Newspaper A");
+    Reader reader;
+    QObject::connect(&newspaper, &Newspaper::send, &reader,&Reader::recevieNewsPaper);
+    newspaper.send();
 
-    return a.exec();
+    return app.exec();
 }
