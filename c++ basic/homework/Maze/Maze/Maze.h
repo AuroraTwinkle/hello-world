@@ -5,6 +5,8 @@
 #include <ctime>
 #include <iostream>
 #include <vector>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib") 
 
 using namespace std;
 
@@ -26,7 +28,8 @@ enum Command
 	RIGHT_OK=6,
 	QUIT_OK=8,
 	MARK_OK=10,
-	CLEARMARK_OK=12
+	CLEARMARK_OK=12,
+	FINDPATH=16
 };
 class Maze
 {
@@ -40,10 +43,10 @@ public:
 	//void TravelMakeMap(int x,int y);//通过遍历生成迷宫
 	void BFS(POINT pos, stack <POINT> path);//深度优先遍历产生随机迷宫
 	int** MazeMap = NULL;//二维数组用来存储迷宫地图
-	bool** IsVisit = NULL;//标记访问过的点
+	int** IsVisit = NULL;//标记访问过的点
 	void Draw();//绘制迷宫中的元素
 	void Move(int c);//玩家移动函数
-	void AutoFindPath();//自动寻路
+	bool AutoFindPath();//自动寻路
 	void StartPlay();//游戏主循环
 	int GetKey();//捕获用户命令
 	bool arriveExit();//判断是否到达出口

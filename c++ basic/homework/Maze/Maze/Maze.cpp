@@ -63,12 +63,12 @@ void Maze::CreatMaze(int Width, int Height)
 		return;
 
 	MazeMap = new int*[Width + 2];
-	IsVisit = new bool*[Height + 2];
+	IsVisit = new int*[Height + 2];
 	for (int x = 0; x < Width + 2; x++)
 	{
 		MazeMap[x] = new int[Height + 2];
-		IsVisit[x] = new bool[Width + 2];
-		//memset(IsVisit[x], false, sizeof(IsVisit[x]));//初始化为未被访问
+		IsVisit[x] = new int[Width + 2];
+		memset(IsVisit[x], 0, (Height+2)*sizeof(int));//初始化为未被访问
 		memset(MazeMap[x], WALL, (Height+2)*sizeof(int));//将数组全部初始化为墙壁
 	}
 	//定义边界
@@ -85,9 +85,8 @@ void Maze::CreatMaze(int Width, int Height)
 	}
 	MazeMap[1][2] = ENTRANCE;//定义入口
 	
-	MazeMap[Height - 1][Width] = EXIT;//定义出口
+	MazeMap[Height -1][Width] = EXIT;//定义出口
 	//TravelMakeMap(((rand() % (Width - 1)) & 0xfffe) + 2, ((rand() % (Height - 1)) & 0xfffe) + 2);
-	
 	POINT entrance;
 	entrance.x = 20;
 	entrance.y = 20;
@@ -97,7 +96,6 @@ void Maze::CreatMaze(int Width, int Height)
 	{
 		MazeMap[i][0] = BORDER;
 		MazeMap[i][Height + 1] = BORDER;
-		cout << MazeMap[i][Height+1];
 	}
 	for (int i = 1; i <= Height; i++)
 	{
@@ -169,7 +167,6 @@ void Maze::BFS(POINT now, stack <POINT> path)//深度优先搜索
 		if (MazeMap[x][y] == WALL)
 		{
 			path.push(nextNode);
-			IsVisit[x][y] = true;
 			MazeMap[x][y] = ROAD;
 			MazeMap[(now.x + x) / 2][(now.y + y) / 2] = ROAD;
 			now = nextNode;
@@ -279,18 +276,99 @@ void Maze::Move(int c)
 		MazeMap[Player.x][Player.y] = ROAD;
 	}
 	
+	//寻路
+	if (c == FINDPATH)
+	{
+		static int cc = 0;
+		bool road=false;
+		if (cc == 0) 
+		{
+			cc++;
+			road=AutoFindPath();
+		}
+		else if(road)
+		{
+			HWND hwnd = GetHWnd();
+			MessageBox(hwnd, TEXT("您已成功寻路，请勿重复寻路操作！"), TEXT("提示"), MB_ICONEXCLAMATION);
+		}
+		else
+		{
+			cc = 0;
+		}
+		
+	}
 }
 
-void Maze::AutoFindPath()
+bool Maze::AutoFindPath()
 {
 	stack <POINT> Path;
-	POINT now, nextNode;
-	now.x = 1;
+	POINT now;
+	now.x = 2;
 	now.y = 2;
+	POINT nextNode = now;
+	MazeMap[now.x][now.y] = ROADMARK;
 	Path.push(now);
 	while (!Path.empty())
 	{
+		now = Path.top();
+		nextNode = now;
+		if (now.x==MazeSize.cx-1 && now.y==MazeSize.cy-1)
+		{
+			HWND hwnd = GetHWnd();
+			MessageBox(hwnd, TEXT("恭喜！寻路成功！按C键可清除您所在位置的路标！"), TEXT("提示"), MB_ICONEXCLAMATION);
+			return true;
+		}
+		//向上尝试寻路
+		nextNode.x -= 1;
+		if (nextNode.x>0 && nextNode.x<MazeSize.cx+1 && nextNode.y>0&&nextNode.y<MazeSize.cy+1 && IsVisit[nextNode.x][nextNode.y]==0 && MazeMap[nextNode.x][nextNode.y] == ROAD)
+		{
+			MazeMap[nextNode.x][nextNode.y] = ROADMARK;
+			IsVisit[nextNode.x][nextNode.y] = 1;
+			Path.push(nextNode);
+			continue;
+		}
+		nextNode = now;
 
+		//向下尝试寻路
+		nextNode.x += 1;
+		if (IsVisit[nextNode.x][nextNode.y]==0&&nextNode.x>0 && nextNode.x<MazeSize.cx + 1 && nextNode.y>0 && nextNode.y<MazeSize.cy + 1 && MazeMap[nextNode.x][nextNode.y] == ROAD)
+		{
+			MazeMap[nextNode.x][nextNode.y] = ROADMARK;
+			IsVisit[nextNode.x][nextNode.y] = 1;
+			Path.push(nextNode);
+			continue;
+		}
+		nextNode = now;
+
+		//向左尝试寻路
+		nextNode.y -= 1;
+		if (IsVisit[nextNode.x][nextNode.y]==0&&nextNode.x>0 && nextNode.x<MazeSize.cx + 1 && nextNode.y>0 && nextNode.y<MazeSize.cy + 1 && MazeMap[nextNode.x][nextNode.y] == ROAD)
+		{
+			MazeMap[nextNode.x][nextNode.y] = ROADMARK;
+			Path.push(nextNode);
+			IsVisit[nextNode.x][nextNode.y] = 1;
+			continue;
+		}
+		nextNode = now;
+
+		//向右尝试寻路
+		nextNode.y += 1;
+		if (IsVisit[nextNode.x][nextNode.y]==0&&nextNode.x>0 && nextNode.x<MazeSize.cx + 1 && nextNode.y>0 && nextNode.y<MazeSize.cy + 1 && MazeMap[nextNode.x][nextNode.y] == ROAD)
+		{
+			MazeMap[nextNode.x][nextNode.y] = ROADMARK;
+			Path.push(nextNode);
+			IsVisit[nextNode.x][nextNode.y] = 1;
+			continue;
+		}
+		POINT temp = Path.top();
+		MazeMap[temp.x][temp.y] = ROAD;
+		Path.pop();
+		if (Path.empty())
+		{
+			HWND hwnd=GetHWnd();
+			MessageBox(hwnd, TEXT("抱歉该迷宫无通路！"), TEXT("提示"), MB_ICONEXCLAMATION);
+			return false;
+		}
 	}
 }
 
@@ -300,6 +378,7 @@ void Maze::StartPlay()
 {
 	int c = 0;
 	
+	PlaySound(TEXT("Star.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	while (!(((c = GetKey())==QUIT_OK) && Quit()))
 	{
 		
@@ -355,6 +434,10 @@ int Maze::GetKey()
 	{
 		cmd |= CLEARMARK_OK;
 	}
+	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+	{
+		cmd |= FINDPATH;
+	}
 
 	return cmd;
 }
@@ -364,7 +447,7 @@ bool Maze::arriveExit()
 	if (Player.x == MazeSize.cx - 1 && MazeSize.cy == Player.y)
 	{
 		HWND hwnd = GetHWnd();
-		if (MessageBox(hwnd, TEXT("您已到达终点，是否再来一局？"), TEXT("大吉大利，今晚吃鸡"), MB_ICONQUESTION | MB_YESNO) == IDYES)
+		if (MessageBox(hwnd, TEXT("您已到达终点，是否再来一局？"), TEXT("大吉大利，今晚吃鸡"), MB_ICONERROR | MB_YESNO) == IDYES)
 		{
 			InitGame();
 			return false;
