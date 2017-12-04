@@ -1,8 +1,8 @@
-﻿  main.cpp
-  Maze.cpp
+﻿  Maze.cpp
+  main.cpp
   正在生成代码
-f:\hello-world\c++ basic\homework\maze\maze\maze.cpp(373): warning C4715: “Maze::AutoFindPath”: 不是所有的控件路径都返回值
-  All 231 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+f:\hello-world\c++ basic\homework\maze\maze\maze.cpp(371): warning C4715: “Maze::AutoFindPath”: 不是所有的控件路径都返回值
+  All 224 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
   Maze.vcxproj -> F:\hello-world\c++ basic\homework\Maze\Release\Maze.exe
   Maze.vcxproj -> F:\hello-world\c++ basic\homework\Maze\Release\Maze.pdb (Full PDB)

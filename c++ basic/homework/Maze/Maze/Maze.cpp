@@ -1,11 +1,9 @@
 #include "Maze.h"
 
-IMAGE mazeItem(200, 20);//加载地图元素
-IMAGE mazeSight(360, 280);//绘制迷宫
-IMAGE Photo(20, 20);//存放文件加载的图片
-Maze::Maze()
-{
 
+Maze::Maze():Photo(20,20),mazeItem(200,20),mazeSight(360,280)
+{
+	
 }
 
 
@@ -28,15 +26,15 @@ void Maze::HelloWorld()
 	outtextxy(0, 382, _T("操作说明："));
 	outtextxy(0, 402, _T("方向键移动 "));
 	outtextxy(0, 420, _T("ESC：退出"));
-	outtextxy(0, 440, _T("回车：自动寻路"));
+	outtextxy(0, 440, _T("F：自动寻路"));
 	outtextxy(0, 460, _T("C:清除路标 空格:路标"));
 }
 
 void Maze::InitGame()
 {
-	initgraph(640, 480, SHOWCONSOLE);//打开一个图形窗口
+	initgraph(640, 480);//打开一个图形窗口
 	HelloWorld();
-	
+	cc = 0;
 	if (MazeMap != NULL)
 	{
 		for (int x = 0; x < MazeSize.cx + 2; x++)
@@ -109,15 +107,15 @@ void Maze::CreatMaze(int Width, int Height)
 void Maze::SetMazeSize()//从用户的输入获取迷宫的大小
 {
 	MazeSize.cx = MazeSize.cy = 0;
-	TCHAR inp[4];
-	while (MazeSize.cx<20 || MazeSize.cx>100)
+	TCHAR inp[5];
+	while (MazeSize.cx<20 || MazeSize.cx>8888)
 	{
-		InputBox(inp, 4, _T("请输入迷宫高度Y\n范围20～100"), NULL, _T("20"));
+		InputBox(inp, 5, _T("请输入迷宫高度Y\n范围20～2000"), NULL, _T("20"));
 		MazeSize.cx = _ttoi(inp);
 	}
-	while (MazeSize.cy < 20 || MazeSize.cy>100)
+	while (MazeSize.cy < 20 || MazeSize.cy>8888)
 	{
-		InputBox(inp, 4, _T("请输入迷宫宽度\n范围20～100"), NULL, _T("20"));
+		InputBox(inp, 5, _T("请输入迷宫宽度\n范围20～2000"), NULL, _T("20"));
 		MazeSize.cy = _ttoi(inp);
 	}
 
@@ -279,8 +277,8 @@ void Maze::Move(int c)
 	//寻路
 	if (c == FINDPATH)
 	{
-		static int cc = 0;
-		bool road=false;
+		
+		static bool road=false;
 		if (cc == 0) 
 		{
 			cc++;
@@ -434,7 +432,7 @@ int Maze::GetKey()
 	{
 		cmd |= CLEARMARK_OK;
 	}
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+	if (GetAsyncKeyState('F') & 0x8000)
 	{
 		cmd |= FINDPATH;
 	}

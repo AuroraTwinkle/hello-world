@@ -40,7 +40,7 @@ public:
 	void InitGame();//初始化游戏数据，包括地图，人物等
 	void CreatMaze(int Height, int Width);//创建迷宫
 	void SetMazeSize();//设置迷宫大小
-	//void TravelMakeMap(int x,int y);//通过遍历生成迷宫
+	//void TravelMakeMap(int x,int y);//通过随机遍历生成迷宫
 	void BFS(POINT pos, stack <POINT> path);//深度优先遍历产生随机迷宫
 	int** MazeMap = NULL;//二维数组用来存储迷宫地图
 	int** IsVisit = NULL;//标记访问过的点
@@ -55,10 +55,14 @@ public:
 	void loadImage();
 	vector<POINT> notVisitNode(POINT now);
 	//static std::default_random_engine direct;
+	IMAGE mazeItem;//加载地图元素
+	IMAGE mazeSight;//绘制迷宫
+	IMAGE Photo;//存放文件加载的图片
 private:
 	SIZE MazeSize;//迷宫尺寸
 	RECT seeSight;//视野
 	POINT Player;
+	int cc;//用来避免重复寻路操作
 	stack <POINT> PathStack;//路径栈	
 	int dir[4][2] = { { -1,0 },{ 1,0 },{ 0,-1 },{ 0,1 } };
 };
