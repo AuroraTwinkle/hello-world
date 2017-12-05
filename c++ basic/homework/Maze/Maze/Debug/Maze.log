@@ -1,4 +1,8 @@
 ﻿  Maze.cpp
-f:\hello-world\c++ basic\homework\maze\maze\maze.cpp(371): warning C4715: “Maze::AutoFindPath”: 不是所有的控件路径都返回值
+  正在生成代码...
+f:\hello-world\c++ basic\homework\maze\maze\maze.cpp(423): warning C4715: “Maze::AutoFindPath”: 不是所有的控件路径都返回值
+  正在编译...
+  main.cpp
+  正在生成代码...
   Maze.vcxproj -> F:\hello-world\c++ basic\homework\Maze\Debug\Maze.exe
   Maze.vcxproj -> F:\hello-world\c++ basic\homework\Maze\Debug\Maze.pdb (Full PDB)
