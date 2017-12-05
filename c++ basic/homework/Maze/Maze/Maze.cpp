@@ -34,6 +34,7 @@ void Maze::InitGame()
 {
 	initgraph(640, 480);//打开一个图形窗口
 	HelloWorld();
+	int wid, hei;
 	cc = 0;
 	if (MazeMap != NULL)
 	{
@@ -43,15 +44,32 @@ void Maze::InitGame()
 		}
 		delete[] MazeMap;
 	}
-	SetMazeSize();
+	HWND hwnd = GetHWnd();
+	if ((MessageBox(hwnd, TEXT("欢迎来到迷宫！点击“是”自动生成地图，点击“否”从文件导入地图."), TEXT("注意"), MB_ICONQUESTION | MB_YESNO)) == IDYES)
+	{
+		SetMazeSize();
+		wid = MazeSize.cx;
+		hei = MazeSize.cy;
+		FileOrRand = true;
+	}
 	//视野范围
+	else
+	{
+		ifstream fp("map.txt");
+		fp >> wid;
+		fp >> hei;
+		MazeSize.cx = wid;
+		MazeSize.cy = hei;
+		FileOrRand = false;
+		fp.close();
+	}
 	seeSight.left = 0;
 	seeSight.top = 0;
 	seeSight.right = 17;
 	seeSight.bottom = 13;
 	Player.x = 2;
 	Player.y = 2;
-	CreatMaze(MazeSize.cx, MazeSize.cy);
+	CreatMaze(wid, hei);
 	Draw();
 }
 
@@ -89,7 +107,29 @@ void Maze::CreatMaze(int Width, int Height)
 	entrance.x = 20;
 	entrance.y = 20;
 	stack <POINT> path;
-	BFS(entrance, path);
+	if (FileOrRand)
+	{
+		BFS(entrance, path);
+	}
+	if (!FileOrRand)
+	{
+		ifstream fp("map.txt");
+		int x;
+		if (fp.is_open())
+		{
+			fp >> x;
+			fp >> x;
+			for (int i = 0; i < Width; i++)
+			{
+				for (int j = 0; j < Height; j++)
+				{
+					fp >> MazeMap[i][j];
+
+				}
+			}
+		}
+		fp.close();
+	}
 	for (int i = 0; i <= Width + 1; i++)
 	{
 		MazeMap[i][0] = BORDER;
@@ -100,8 +140,20 @@ void Maze::CreatMaze(int Width, int Height)
 		MazeMap[0][i] = BORDER;
 		MazeMap[Width + 1][i] = BORDER;
 	}
-	
-
+	//ofstream fp;//此段代码用于导出随机生成的地图数据，因为自己构造地图数据太麻烦了
+	//fp.open("map.txt");
+	//if (fp.is_open())
+	//{
+	//	for (int i = 0; i < Width; i++)
+	//	{
+	//		for (int j = 0; j < Height; j++)
+	//		{
+	//			fp << MazeMap[i][j]<< "\t";
+	//		}
+	//		fp << endl;
+	//	}
+	//}
+	//fp.close();
 }
 
 void Maze::SetMazeSize()//从用户的输入获取迷宫的大小

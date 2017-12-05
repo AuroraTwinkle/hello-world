@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <mmsystem.h>
+#include <fstream>
 #pragma comment(lib, "winmm.lib") 
 
 using namespace std;
@@ -51,6 +52,7 @@ public:
 	int GetKey();//捕获用户命令
 	bool arriveExit();//判断是否到达出口
 	bool Quit();//询问用户是否确认退出
+	bool FileOrRand;//用来判断是否从文件导入地图
 	MazeItem getMazeItem(int x, int y);
 	void loadImage();
 	vector<POINT> notVisitNode(POINT now);
