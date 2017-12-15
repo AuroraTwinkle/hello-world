@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 using namespace std;
 
 void insertSort(int data[], int n);
@@ -7,13 +8,15 @@ void binaryInsertSort(int a[], int l);
 void shellSort(int a[], int l);
 void bubbleSort_0(int a[], int l);
 void bubbleSort_1(int a[], int l);
-
+int Partition(int a[], int first, int end);
+void quickSort(int a[], int first, int end);
+void quickSort_1(int a[], int n);
 
 int main()
 {
 	int data[] = { 0,23,45,56,2,4,78,45,4,658,234,8,5,2 };
 	int l = 14;
-	bubbleSort_1(data, l);
+	quickSort_1(data, 13);
 	for (int i = 1; i < l; i++)
 	{
 		cout << data[i] << "\t";
@@ -130,4 +133,81 @@ void bubbleSort_1(int a[], int length)
 			}
 		}
 	}
+}
+
+int Partition(int a[], int first, int end)
+{
+	int i = first, j = end;
+	a[0] = a[i];
+	while (i < j)
+	{
+		
+		while (i < j && a[0] < a[j])j--;
+		if (i < j)
+		{
+			a[i] = a[j];
+			i++;
+		}
+		while (i<j && a[i]<a[0])i++;
+		if (i < j)
+		{
+			a[j] = a[i];
+			j--;
+		}
+	}
+	a[i] = a[0];
+	return i;
+}
+
+void quickSort(int a[], int first, int end)
+{
+	if (first < end)
+	{
+		int pivot = Partition(a, first, end);
+		quickSort(a, first, pivot - 1);
+		quickSort(a,pivot+1,end);
+	}
+}
+
+void quickSort_1(int a[], int n)
+{
+	stack <int> s;
+	int low = 1;
+	int high = n;
+	if(low<high)
+	{
+		int mid = Partition(a, low, high);
+		if (low < mid)
+		{
+			s.push(mid - 1);
+			s.push(low);
+			
+		}
+		if (mid < high)
+		{
+			s.push(high);
+			s.push(mid + 1);
+			
+		}
+	}
+	
+	while(!s.empty())
+	{
+		int first = s.top();
+		s.pop();
+		int end = s.top();
+		s.pop();
+		int mid = Partition(a, first, end);
+		if (first < mid)
+		{
+			s.push(mid - 1);
+			s.push(first);
+		}
+		if (mid < end)
+		{
+			s.push(end);
+			s.push(mid + 1);
+		}
+	}
+	
 }
