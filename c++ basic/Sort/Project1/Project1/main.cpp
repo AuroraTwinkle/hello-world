@@ -14,9 +14,9 @@ void quickSort_1(int a[], int n);
 
 int main()
 {
-	int data[] = { 0,23,45,56,2,4,78,45,4,658,234,8,5,2 };
-	int l = 14;
-	quickSort_1(data, 13);
+	int data[] = { 0,23,45,56,2,4,78,4646,5445,45,4,658,234,8,5,2 };
+	int l = 16;
+	quickSort_1(data, 15);
 	for (int i = 1; i < l; i++)
 	{
 		cout << data[i] << "\t";
