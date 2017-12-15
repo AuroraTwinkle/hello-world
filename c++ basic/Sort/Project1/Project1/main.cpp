@@ -11,15 +11,22 @@ void bubbleSort_1(int a[], int l);
 int Partition(int a[], int first, int end);
 void quickSort(int a[], int first, int end);
 void quickSort_1(int a[], int n);
+void selectSort(int a[], int n);
+void Sift(int a[], int k, int m);//筛选法调整堆
+void heapSort(int a[], int n);//堆排序
+void Merge(int a[], int r[], int s, int m, int n);//一次归并
+void mergeSort(int a[], int r[], int s, int t);
 
 int main()
 {
-	int data[] = { 0,23,45,56,2,4,78,4646,5445,45,4,658,234,8,5,2 };
+	int data[] = { 5,23,45,56,2,4,454,45,65,456,87,78,79 };
+	int data1[] = { 0,120,45,56,1};
+	int data2[13];
 	int l = 16;
-	quickSort_1(data, 15);
-	for (int i = 1; i < l; i++)
+	mergeSort(data1,data2,0,4);
+	for (int i = 0; i < 13; i++)
 	{
-		cout << data[i] << "\t";
+		cout << data2[i] << "\t";
 	}
 	getchar();
 	return 0;
@@ -210,4 +217,103 @@ void quickSort_1(int a[], int n)
 		}
 	}
 	
+}
+
+void selectSort(int a[], int n)
+{
+	for (int i = 1; i < n; i++)
+	{
+		int index = i;
+		for (int j = i + 1; j < n; j++)
+		{
+			if (a[j] < a[index])
+				index = j;
+		}
+		if (index != i)
+		{
+			a[0] = a[i];
+			a[i] = a[index];
+			a[index] = a[0];
+		}
+	}
+}
+
+void Sift(int a[], int k, int m)
+{
+	int i = k;
+	int j = 2 * i;
+	while (j <= m)
+	{
+		if (j < m&&a[j] > a[j + 1])
+			j++;
+		if (a[i] < a[j])
+			break;
+		else
+		{
+			a[0] = a[i];
+			a[i] = a[j];
+			a[j] = a[0];
+			i = j;
+			j = 2 * i;
+		}
+	}
+}
+
+void heapSort(int a[], int n)
+{
+	for (int i = n / 2; i >= 1; i--)
+	{
+		Sift(a, i, n);
+	}
+	for (int i = 1; i < n; i++)
+	{
+		a[0] = a[1];
+		a[1] = a[n - i + 1];
+		a[n - i + 1] = a[0];
+		Sift(a, 1, n - i);
+	}
+}
+
+void Merge(int a[], int r[], int s, int m, int t)
+{
+	int i = s;
+	int j = m + 1;
+	int k = s;
+	while (i <= m && j <= t)
+	{
+		if (a[i] <= a[j])
+		{
+			r[k++] = a[i++];
+		}
+		else
+		{
+			r[k++] = r[j++];
+		}
+	}
+	if (i <= m)
+	{
+		while (i <= m)
+		{
+			r[k++] = a[i++];
+		}
+	}
+	else
+	{
+		while (j <= t)
+		{
+			r[k++] = a[j++];
+		}
+	}
+}
+
+void mergeSort(int a[], int r[], int s, int t)
+{
+	if (s == t)
+		r[s] = a[s];
+	else {
+		int m = (s + t) / 2;
+		mergeSort(a, r, s, m);
+		mergeSort(a, r, m + 1, t);
+		Merge(a, r, s, m, t);
+	}
 }
