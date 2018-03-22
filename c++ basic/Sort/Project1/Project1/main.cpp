@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <stack>
 using namespace std;
 
@@ -12,9 +12,9 @@ int Partition(int a[], int first, int end);
 void quickSort(int a[], int first, int end);
 void quickSort_1(int a[], int n);
 void selectSort(int a[], int n);
-void Sift(int a[], int k, int m);//É¸Ñ¡·¨µ÷Õû¶Ñ
-void heapSort(int a[], int n);//¶ÑÅÅĞò
-void Merge(int a[], int r[], int s, int m, int n);//Ò»´Î¹é²¢
+void Sift(int a[], int k, int m);//ç­›é€‰æ³•è°ƒæ•´å †
+void heapSort(int a[], int n);//å †æ’åº
+void Merge(int a[], int r[], int s, int m, int n);//ä¸€æ¬¡å½’å¹¶
 void mergeSort(int a[], int r[], int s, int t);
 
 int main()
