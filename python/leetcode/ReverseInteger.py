@@ -4,9 +4,6 @@
 __author__ = 'Aurora-Twinkle'
 
 def f():
-    x=-1459685
-    s=(x>0)-(x<0)
-    r=int(str(s*x)[::-1])
-    print(r)
+    
 
 f()
