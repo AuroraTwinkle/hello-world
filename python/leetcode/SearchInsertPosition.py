@@ -25,3 +25,7 @@ class Solution:
                 else:
                     start=mid+1
             return start
+
+'''一行解决
+return len([x for x in nums if x<target])
+'''
