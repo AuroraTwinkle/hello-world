@@ -1,6 +1,5 @@
 def f():
     a=[1,2]
-    b=[2,8]
-    c=a+b
-    print(c)
+    index1=a.index(1)
+    print(index1+1)
 f()
