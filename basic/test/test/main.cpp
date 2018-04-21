@@ -1,80 +1,28 @@
+#include<windows.h>  
+#include"mmsystem.h"  
+#pragma comment(lib,"winmm.lib")  
 
-#ifndef UNICODE
-#define UNICODE
-#endif 
-
-#include <windows.h>
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	// Register the window class.
-	const wchar_t CLASS_NAME[] = L"Sample Window Class";
+	MCI_OPEN_PARMS openparms;
+	openparms.lpstrDeviceType = "MPEGvideo";
+	openparms.lpstrElementName = "F://1.mp3";
 
-	WNDCLASS wc = {};
+	CHAR	strMciError[300];
 
-	wc.lpfnWndProc = WindowProc;
-	wc.hInstance = hInstance;
-	wc.lpszClassName = CLASS_NAME;
+	mciSendCommand(NULL, MCI_OPEN,
+		MCI_OPEN_ELEMENT | MCI_OPEN_TYPE | MCI_WAIT,
+		(DWORD)(LPVOID)(&openparms));
 
-	RegisterClass(&wc);
-
-	// Create the window.
-
-	HWND hwnd = CreateWindowEx(
-		0,                              // Optional window styles.
-		CLASS_NAME,                     // Window class
-		L"Learn to Program Windows",    // Window text
-		WS_OVERLAPPEDWINDOW,            // Window style
-
-										// Size and position
-		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-
-		NULL,       // Parent window    
-		NULL,       // Menu
-		hInstance,  // Instance handle
-		NULL        // Additional application data
-	);
-
-	if (hwnd == NULL)
+	MCI_PLAY_PARMS playparms;
+	MCIERROR err = mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_ELEMENT, (DWORD)(LPVOID)&openparms);
+	if (err)
 	{
-		return 0;
+		mciGetErrorString(err, strMciError, sizeof(strMciError));
+		
+
 	}
 
-	ShowWindow(hwnd, nCmdShow);
-
-	// Run the message loop.
-
-	MSG msg = {};
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	return 0;
-}
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg)
-	{
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-
-	case WM_PAINT:
-	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hwnd, &ps);
-
-		FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
-		EndPaint(hwnd, &ps);
-	}
-	return 0;
-
-	}
-	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+	mciSendCommand(openparms.wDeviceID, MCI_CLOSE, NULL, NULL);
+	return  0;
 }
