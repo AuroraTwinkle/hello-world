@@ -7,10 +7,10 @@
 
 typedef  struct
 {
-	long  int  number;  // ÊéºÅ
-	char  name[50];   // ÊéÃû
-	char  author[20]; // ×÷Õß
-	int   price;    // ¼Û¸ñ
+	long  int  number;  // ä¹¦å·
+	char  name[50];   // ä¹¦å
+	char  author[20]; // ä½œè€…
+	int   price;    // ä»·æ ¼
 } bookinfo;
 
 typedef  struct
@@ -21,10 +21,10 @@ typedef  struct
 
 listtype list;
 
-void InitList();//³õÊ¼»¯
-void Print(listtype L); //´òÓ¡
-int InSert(listtype &L, int i, long int x, const char* book,const char* author, int price);//²åÈëÊı¾İ
-int Delete(listtype &L, int i);//É¾³ı
+void InitList();//åˆå§‹åŒ–
+void Print(listtype L); //æ‰“å°
+int InSert(listtype &L, int i, long int x, const char* book,const char* author, int price);//æ’å…¥æ•°æ®
+int Delete(listtype &L, int i);//åˆ é™¤
 
 int main()
 {
@@ -36,7 +36,7 @@ int main()
 	InSert(list, 5, 5, "java", "G", 100);
 	Print(list);
 	Delete(list, 3);
-	printf("É¾³ıµÚÈıÌõºó:\n");
+	printf("åˆ é™¤ç¬¬ä¸‰æ¡å:\n");
 	Print(list);
 	getchar();
 	return 0;
@@ -51,15 +51,15 @@ int InSert(listtype &L, int i, long int x,const char* book, const char* author, 
 {
 	int j;
 	if (i<1 || i>L.num + 1) {
-		printf("Ô½½ç\n");
+		printf("è¶Šç•Œ\n");
 		return 0;
 	}
 	for (j = L.num; j > i; j--) {
 		L.data[j + 1] = L.data[j];
 	}
 	L.data[i - 1].number = x;
-	strcpy_s(L.data[i - 1].name, book);
-	strcpy_s(L.data[i - 1].author, author);
+	strcpy(L.data[i - 1].name, book);
+	strcpy(L.data[i - 1].author, author);
 	L.data[i - 1].price = price;
 	L.num++;
 	return 1;
@@ -69,7 +69,7 @@ int Delete(listtype &L, int i)
 {
 	int j;
 	if (i<1 || i>L.num) {
-		printf("Ô½½ç\n"); return 0;
+		printf("è¶Šç•Œ\n"); return 0;
 	}
 	for (j = i - 1; j < L.num - 1; j++)
 		L.data[j] = L.data[j + 1];
