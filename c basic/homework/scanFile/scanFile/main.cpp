@@ -1,34 +1,88 @@
 #include <iostream>  
 #include <vector>  
 #include <string>  
-#include <io.h>  
-using namespace std;
-void scanFile(string path, vector<string> &dirpath);
+#include <io.h> 
+#include <list>
+#include <algorithm>
 
-void getfileall(string path, vector<string> &dirpath) {
-	struct _finddata_t fileinfo;    //_finddata_t是一个结构体，要用到#include <io.h>头文件；  
+using namespace std;
+
+typedef struct Node {
+	string name;
+	string path;
+	string size;
+	string extend;
+}fileNode;
+
+void scanFile(string path, list<fileNode> &dirpath, vector<string> &extend);
+string byteToStr(unsigned long size);
+string getFileExtend(string name);
+void printDirectory(list<fileNode> dirpath);
+void printExtend(vector<string> &extend);
+
+
+
+void scanFile(string path, list<fileNode> &dirpath, vector<string> &extend) {
+	struct _finddata_t fileinfo;  
 	long ld;
 	if ((ld = _findfirst((path + "\\*").c_str(), &fileinfo)) != -1l) {
 		do {
-			if ((fileinfo.attrib&_A_SUBDIR)) {  //如果是文件夹；  
-				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0) {  //如果文件名不是.或者,,,则递归获取子文件中的文件；  
-					getfileall(path + "\\" + fileinfo.name, dirpath);  //递归子文件夹；  
+			if ((fileinfo.attrib&_A_SUBDIR)) {  //如果是文件夹；
+				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0) {  
+					scanFile(path + "\\" + fileinfo.name, dirpath, extend);  //递归子文件夹；  
 				}
+				
 			}
 			else   //如果是文件；  
 			{
-				dirpath.push_back(path + "\\" + fileinfo.name);
-				cout << path+"\\"+fileinfo.name << endl;  
+				fileNode node;
+				node.path = path + "\\" + fileinfo.name;
+				node.name = fileinfo.name;
+				node.size = byteToStr(fileinfo.size);
+				node.extend = getFileExtend(fileinfo.name);
+				vector<string>::iterator it = find(extend.begin(), extend.end(), node.extend);
+				if (it == extend.end()) { extend.push_back(node.extend); }
+				dirpath.push_back(node);
 			}
 		} while (_findnext(ld, &fileinfo) == 0);
 		_findclose(ld);
 	}
 }
 
+string byteToStr(unsigned long size)
+{
+	string strSize;
+	double temp = (float)size / 1024;
+	if (temp <= 1024) {
+
+		strSize =to_string(temp) + "KB";
+	}
+	else {
+		strSize = to_string(temp / 1042) + "MB" + to_string(temp) + "KB";
+	}
+	return strSize;
+}
+
+string getFileExtend(string name)
+{
+	int index = name.find_first_of(".");
+	string str = name.erase(0, index+1);
+	return str;
+}
+
+
+
 int main() {
-	string  path = "F:\\目录";   //由于\是转义字符的起始字符，路径中要用\\，也可以只用一个/;  
-	vector<string> dirpath;     //保存文件的路径；  
-	getfileall(path, dirpath);
+	string  path = "F:\\目录";   
+	list<fileNode> dirpath;      
+	vector<string> extend;
+	scanFile(path, dirpath, extend);
+	vector<string>::iterator it;
+	for (it = extend.begin(); it != extend.end(); it++)
+	{
+		cout <<(*it) << endl;
+		
+	}
 	getchar();
 	return 0;
 }
