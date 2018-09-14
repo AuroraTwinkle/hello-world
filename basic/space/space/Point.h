@@ -12,15 +12,16 @@ class Point {
 public:
     Point();
     ~Point();
-    Point(double x, double y);
+    Point(int x, int y);
     //get和set方法
-    void setX_origin(double x);
-    double getX_origin();
-    void setY_origin(double y);
-    double getY_origin();
+    void setX_origin(int x);
+    int getX_origin();
+    void setY_origin(int y);
+    int getY_origin();
+	bool operator <(Point point) const;//重载 < 操作符
 protected:
-    double x_origin;//x坐标
-    double y_origin;//y坐标
+    int x_origin;//x坐标
+    int y_origin;//y坐标
 
 };
 

@@ -15,19 +15,19 @@ Circle::~Circle()
 {
 }
 
-Circle::Circle(double x, double y, double r):Point(x,y)
+Circle::Circle(int x, int y, int r):Point(x,y)
 {
     this->r = r;
     std::cout<<"add "<<countCircle<<"th "<<"circle:"<<"("<<this->x_origin<<","<<this->y_origin<<","<<this->r<<")"<<std::endl;
     countCircle++;
 }
 
-void Circle::setR(double r)
+void Circle::setR(int r)
 {
     this->r = r;
 }
 
-double Circle::getR()
+int Circle::getR()
 {
     return this->r;
 }

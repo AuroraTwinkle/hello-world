@@ -13,28 +13,33 @@ Point::~Point()
 {
 }
 
-Point::Point(double x, double y)
+Point::Point(int x, int y)
 {
     this->x_origin = x;
     this->y_origin = y;
 }
 
-void Point::setX_origin(double x)
+void Point::setX_origin(int x)
 {
     this->x_origin = x;
 }
 
-double Point::getX_origin()
+int Point::getX_origin()
 {
     return this->x_origin;
 }
 
-void Point::setY_origin(double y)
+void Point::setY_origin(int y)
 {
     this->y_origin = y;
 }
 
-double Point::getY_origin()
+int Point::getY_origin()
 {
     return this->y_origin;
+}
+
+bool Point::operator<(Point point) const//ÖØÔØ < ²Ù×÷·û
+{
+	return x_origin < point.getX_origin();
 }

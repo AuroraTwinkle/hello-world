@@ -13,16 +13,16 @@ class Rect :
 public:
     Rect();
     ~Rect();
-    Rect(double x_origin, double y_origin, double x_max, double y_max);
+    Rect(int x_origin, int y_origin, int x_max, int y_max);
     static int countRect;//指示添加的矩形的数量
     //get和set方法
-    void setX_max(double x);
-    double getX_max();
-    void setY_max(double y);
-    double getY_max();
+    void setX_max(int x);
+    int getX_max();
+    void setY_max(int y);
+    int getY_max();
 private:
-    double x_max;//矩形右下方x坐标
-    double y_max;//矩形右下方y坐标
+    int x_max;//矩形右下方x坐标
+    int y_max;//矩形右下方y坐标
 };
 
 
