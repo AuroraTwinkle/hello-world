@@ -1,14 +1,30 @@
-#pragma once
+//
+// Created by Aurora on 2018/9/14.
+//
+
+#ifndef SPACE_CANVAS_H
+#define SPACE_CANVAS_H
+
+#include <vector>
 #include "Point.h"
+#include "Circle.h"
+#include "Rect.h"
+#include <random>
+#include <ctime>
+
+
 class Canvas
 {
 public:
-	Canvas(int capacity);
-	~Canvas();
-	void add(Point * point);
+    Canvas();
+    ~Canvas();
+    static std::default_random_engine random;
+    std::vector<Circle> addCircle(Rect *rect, int count);//æ·»åŠ countä¸ªåœ†
+    Rect addRect(double x_origin, double y_origin, double x_max, double y_max);//æ·»åŠ ä¸€ä¸ªçŸ©å½¢åŒºåŸŸ
+    std::vector<Point> cutRectByScalar(Rect *rect, double x, double y);//åˆ†å‰²çŸ©å½¢åŒºåŸŸ
 private:
-	Point ** point;
-	int capacity;//»­²¼ÈİÁ¿
-	int cursor;//ÓÎ±ê£¬ÓÃÀ´Ö¸Ê¾Ä¿Ç°»­²¼ÉÏÓĞ¶àÉÙ¸öÍ¼ĞÎ
+
 };
 
+
+#endif //SPACE_CANVAS_H

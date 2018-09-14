@@ -1,19 +1,29 @@
-#pragma once
+//
+// Created by Aurora on 2018/9/14.
+//
+
+#ifndef SPACE_RECT_H
+#define SPACE_RECT_H
+
+
 #include "Point.h"
 class Rect :
-	public Point
+        public Point
 {
 public:
-	Rect();
-	~Rect();
-	Rect(double x, double y, double x_max, double y_max);
-	//get和set方法
-	void setX_max(double x);
-	double getX_max();
-	void setY_max(double y);
-	double getY_max();
+    Rect();
+    ~Rect();
+    Rect(double x_origin, double y_origin, double x_max, double y_max);
+    static int countRect;//鎸囩ず娣诲姞鐨勭煩褰㈢殑鏁伴噺
+    //get鍜宻et鏂规硶
+    void setX_max(double x);
+    double getX_max();
+    void setY_max(double y);
+    double getY_max();
 private:
-	double x_max;//矩形右下方x坐标
-	double y_max;//矩形右下方y坐标
+    double x_max;//鐭╁舰鍙充笅鏂箈鍧愭爣
+    double y_max;//鐭╁舰鍙充笅鏂箉鍧愭爣
 };
 
+
+#endif //SPACE_RECT_H
