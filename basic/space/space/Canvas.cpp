@@ -61,7 +61,7 @@ std::vector<Point> Canvas:: cutRectByScalar(Rect *rect, int xScalar, int yScalar
         }
         std::cout<<"the space that has been cut:"<<std::endl;
         std::vector<Point>::iterator it;
-        for(it=vectorRect.begin();it!=vectorRect.end();it++){
+        for(it=vectorRect.begin();it!=vectorRect.end();it++){//打印分割后的区域
             std::cout<<"("<<(*it).getX_origin()<<","<<(*it).getY_origin()<<")"<<"\t";
         }
 		std::cout << std::endl;
