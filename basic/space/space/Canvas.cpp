@@ -77,7 +77,7 @@ std::set<Point> Canvas::findSubRectHasObstacle(Rect * rect, std::vector<Circle> 
 	int xScalar = this->getXscalar();
 	int yScalar = this->getYscalar();
 	for (auto circle = vectorCircle.begin(); circle != vectorCircle.end();circle++) {
-		if (circle->getR() < xScalar && circle->getR() < yScalar) {//圆小于分割标度的情况
+		if (circle->getR() <= xScalar && circle->getR() <= yScalar) {//圆小于分割标度的情况
 			int xOrigin = circle->getX_origin();//圆心x坐标
 			int yOrigin = circle->getY_origin();//圆心y坐标
 			Point pointRect = findCenterInWhichSubRect(*circle);//圆心所在子区域
