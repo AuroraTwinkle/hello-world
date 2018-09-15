@@ -12,6 +12,7 @@
 #include <random>
 #include <ctime>
 #include <set>
+#include <map>
 
 
 class Canvas
@@ -23,9 +24,10 @@ public:
     std::vector<Circle> addCircle(Rect *rect, int count);//添加count个圆
     Rect addRect(int x_origin, int y_origin, int x_max, int y_max);//添加一个矩形区域
     std::vector<Point> cutRectByScalar(Rect *rect, int xScalar, int yScalar);//分割矩形区域
-	std::set<Point> findSubRectHasObstacle(Rect *rect, std::vector<Circle> vectorCircle);//寻找被障碍物（圆形）占领的子区域
-	Point findCenterInWhichSubRect(Circle circle);//计算出圆心位于哪个子区域
-	std::vector<int> distCenterToVertex(Point *point, Circle *circle);//计算圆心到子区域四个顶点的距离
+	std::vector<Point> findSubRectHasObstacle(Rect *rect, std::vector<Circle> &vectorCircle);//寻找被障碍物（圆形）占领的子区域
+	Point findCenterInWhichSubRect(Circle &circle);//计算出圆心位于哪个子区域
+	std::vector<Point> circleBySubRect(int index, Point * pointRect, std::vector<double> &distance, Circle &circle);//圆经过的区域
+	std::vector<double> distCenterToVertex(Point *point, Circle &circle);//计算圆心到子区域四个顶点的距离
 	//set and get method
 	void setXscalar(int xScalar);
 	int getXscalar();
