@@ -110,7 +110,7 @@ std::vector<Point> Canvas::findSubRectHasObstacle(Rect * rect, std::vector<Circl
 
 		}
 	}
-	//setPoint.erase(std::unique(setPoint.begin(), setPoint.end()), setPoint.end());
+	setPoint.erase(std::unique(setPoint.begin(), setPoint.end()), setPoint.end());
 	std::cout << "the subRect that has been obstacle:" << std::endl;
 	for (auto subRectHasObstacle = setPoint.begin(); subRectHasObstacle != setPoint.end();subRectHasObstacle++) {
 		

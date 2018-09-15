@@ -18,7 +18,9 @@ public:
     int getX_origin();
     void setY_origin(int y);
     int getY_origin();
-	bool operator <(Point point) const;//重载 < 操作符
+	
+	bool operator==(const Point& pt); //重载==操作符
+
 protected:
     int x_origin;//x坐标
     int y_origin;//y坐标

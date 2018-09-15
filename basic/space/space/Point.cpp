@@ -39,7 +39,9 @@ int Point::getY_origin()
     return this->y_origin;
 }
 
-bool Point::operator<(Point point) const//ÖØÔØ < ²Ù×÷·û
+bool Point::operator==(const Point & pt)
 {
-	return x_origin < point.getX_origin();
+	return this->x_origin==pt.x_origin && this->y_origin==pt.y_origin;
 }
+
+
