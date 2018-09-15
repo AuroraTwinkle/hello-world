@@ -44,4 +44,16 @@ bool Point::operator==(const Point & pt)
 	return this->x_origin==pt.x_origin && this->y_origin==pt.y_origin;
 }
 
+bool Point::operator<(const Point & pt)const
+{
+	if (x_origin < pt.x_origin) {
+		return true;
+	}
+	else if (x_origin == pt.x_origin && y_origin < pt.y_origin)
+	{
+		return true;
+	}
+	return false;
+}
+
 

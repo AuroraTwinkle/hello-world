@@ -18,12 +18,12 @@ public:
     int getX_origin();
     void setY_origin(int y);
     int getY_origin();
-	
+	int x_origin;//x坐标
+	int y_origin;//y坐标
 	bool operator==(const Point& pt); //重载==操作符
-
+	bool operator<(const Point& pt)const;//重载<操作符
 protected:
-    int x_origin;//x坐标
-    int y_origin;//y坐标
+    
 
 };
 

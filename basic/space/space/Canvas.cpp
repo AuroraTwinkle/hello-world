@@ -71,9 +71,9 @@ std::vector<Point> Canvas:: cutRectByScalar(Rect *rect, int xScalar, int yScalar
 
 }
 
-std::vector<Point> Canvas::findSubRectHasObstacle(Rect * rect, std::vector<Circle> &vectorCircle)
+std::set<Point> Canvas::findSubRectHasObstacle(Rect * rect, std::vector<Circle> &vectorCircle)
 {
-	std::vector<Point> setPoint;
+	std::set<Point> setPoint;
 	int xScalar = this->getXscalar();
 	int yScalar = this->getYscalar();
 	for (auto circle = vectorCircle.begin(); circle != vectorCircle.end();circle++) {
@@ -87,15 +87,15 @@ std::vector<Point> Canvas::findSubRectHasObstacle(Rect * rect, std::vector<Circl
 				Point point1(xOrigin, yOrigin - yScalar);//起始点右上方区域
 				Point point2(xOrigin - xScalar, yOrigin);//起始点左下方区域
 				Point point3(xOrigin - xScalar, yOrigin - yScalar);//起始点左上方区域
-				setPoint.push_back(point);
-				setPoint.push_back(point1);
-				setPoint.push_back(point2);
-				setPoint.push_back(point3);
+				setPoint.insert(point);
+				setPoint.insert(point1);
+				setPoint.insert(point2);
+				setPoint.insert(point3);
 			}
 			
 			else if(distance[0]==distance[1]==distance[2])//圆心到四个顶点的距离相同时
 			{
-				setPoint.push_back(pointRect);
+				setPoint.insert(pointRect);
 			}
 			
 			else {
@@ -103,18 +103,19 @@ std::vector<Point> Canvas::findSubRectHasObstacle(Rect * rect, std::vector<Circl
 				int index = minDistance - distance.begin();//获得距离最小值的下标，以确定圆心离哪个子区域最近，0代表左上，1代表右上，2代表左下，3代表右下
 				std::vector<Point> pointRects = circleBySubRect(index, &pointRect, distance, *circle);
 				for (auto pointRec = pointRects.begin(); pointRec != pointRects.end();pointRec++) {
-					setPoint.push_back(*pointRec);
+					setPoint.insert(*pointRec);
 				}
-				setPoint.push_back(pointRect);
+				setPoint.insert(pointRect);
 			}
 
 		}
 	}
-	setPoint.erase(std::unique(setPoint.begin(), setPoint.end()), setPoint.end());
+	
+
 	std::cout << "the subRect that has been obstacle:" << std::endl;
 	for (auto subRectHasObstacle = setPoint.begin(); subRectHasObstacle != setPoint.end();subRectHasObstacle++) {
 		
-		std::cout << "(" << subRectHasObstacle->getX_origin() << "," << subRectHasObstacle->getY_origin() << ")" << std::endl;
+		std::cout << "(" << subRectHasObstacle->x_origin << "," <<subRectHasObstacle->y_origin<<  ")" << std::endl;
 
 	}
 	
