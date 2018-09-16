@@ -35,12 +35,16 @@ double Canvas::distanceBtwPoints(Point pt, Point pt1)
 */
 std::vector<Circle> Canvas:: addCircle(Rect *rect, int count){
     std::vector<Circle> vectorCircle;
-    std::uniform_int_distribution<int> xRand(rect->getX_origin()+20, rect->getX_max()-20);
-	std::uniform_int_distribution<int> yRand(rect->getY_origin()+20, rect->getY_max()-20);
-	std::uniform_int_distribution<int> rRand(0, (this->getXscalar()));
+    std::uniform_int_distribution<int> xRand(rect->getX_origin(), rect->getX_max()-1);
+	std::uniform_int_distribution<int> yRand(rect->getY_origin(), rect->getY_max()-1);
+	int minXYscalar = std::min(this->xScalar, this->yScalar);
+	
     for(int i=0;i<count;i++){//随机生成随机大小的圆并放入vector
         int x = xRand(random);
         int y = yRand(random);
+		int minXY = std::min(x, y);
+		int rMin = std::min(minXY, minXYscalar);
+		std::uniform_int_distribution<int> rRand(0, rMin);
         int r = rRand(random);
         Circle circle(x,y,r);
         vectorCircle.push_back(circle);
@@ -51,6 +55,46 @@ std::vector<Circle> Canvas:: addCircle(Rect *rect, int count){
 Rect Canvas:: addRect(int x_origin, int y_origin, int x_max, int y_max){
     Rect rect(x_origin,y_origin,x_max,y_max);
     return rect;
+}
+
+void Canvas::addToObstacleSet(std::set<Point>& setPoint, Rect *rect, std::vector<Point> eigthSubRectss, Circle circle, std::vector<double> distance)
+{
+	if (circle.getR() <= xScalar && circle.getR() <= yScalar) {//圆小于分割标度的情况
+
+		if ((circle.getX_origin() % xScalar) == 0 && (circle.getY_origin() % yScalar) == 0) {//圆心刚好在子区域起始点
+
+			for (int i = 4; i < 8; i++) {//eigthSubRectss[4],[5],[6],[7]分别代表左上，右上，左下，右下子区域
+				if (isInRect(rect, eigthSubRectss[i]))
+				{
+					setPoint.insert(eigthSubRectss[i]);
+				}
+			}			
+		}
+
+		else if (distance[0] == distance[1] == distance[2])//圆心到四个顶点的距离相同时
+		{
+			setPoint.insert(eigthSubRectss[8]);
+		}
+
+		else {
+			std::vector<double> ::iterator minDistance = std::min_element(distance.begin(), distance.end());
+			int index = minDistance - distance.begin();//获得距离最小值的下标，以确定圆心离哪个子区域最近，0代表左上，1代表右上，2代表左下，3代表右下
+			std::vector<Point> pointRects = circleBySubRect(index, &eigthSubRectss[8], distance, circle);
+			for (auto pointRec = pointRects.begin(); pointRec != pointRects.end(); pointRec++) {
+				if (isInRect(rect, *pointRec))
+				{
+					setPoint.insert(*pointRec);
+				}
+			}
+			setPoint.insert(eigthSubRectss[8]);
+		}
+
+	}
+}
+
+bool Canvas::isInRect(Rect *rect, Point pointRect)
+{
+	return pointRect.getX_origin() < rect->getX_max() && pointRect.getX_origin() > rect->getX_origin() && pointRect.getY_origin() < rect->getY_max() && pointRect.getY_origin() > rect->getY_origin();
 }
 
 /*
@@ -120,40 +164,13 @@ std::vector<double> Canvas::distCenterToVertex(Point * point, Circle & circle)
 std::set<Point> Canvas::findSubRectHasObstacle(Rect * rect, std::vector<Circle> &vectorCircle)
 {
 	std::set<Point> setPoint;
-	for (auto circle = vectorCircle.begin(); circle != vectorCircle.end();circle++) {
-		int xOrigin = circle->getX_origin();//圆心x坐标
-		int yOrigin = circle->getY_origin();//圆心y坐标
+	for (auto circle = vectorCircle.begin(); circle != vectorCircle.end(); circle++) {
 		Point pointRect = findCenterInWhichSubRect(*circle);//圆心所在子区域
 		std::vector<Point> eigthSubRectss = eightSubRectsByOnePoint(&pointRect);//算出八个子区域
 		std::vector<double> distance = distCenterToVertex(&pointRect, *circle);//圆心到四个顶点的距离
-		if (circle->getR() <= xScalar && circle->getR() <= yScalar) {//圆小于分割标度的情况
-			
-			if ((xOrigin % xScalar)==0 && (yOrigin % yScalar)==0){//圆心刚好在子区域起始点
-				setPoint.insert(eigthSubRectss[7]);//起始点右下方区域
-				setPoint.insert(eigthSubRectss[5]);//起始点右上方区域
-				setPoint.insert(eigthSubRectss[6]);//起始点左下方区域
-				setPoint.insert(eigthSubRectss[4]);//起始点左上方区域				
-			}
-			
-			else if(distance[0]==distance[1]==distance[2])//圆心到四个顶点的距离相同时
-			{
-				setPoint.insert(pointRect);
-			}
-			
-			else {
-				std::vector<double> ::iterator minDistance = std::min_element(distance.begin(), distance.end());
-				int index = minDistance - distance.begin();//获得距离最小值的下标，以确定圆心离哪个子区域最近，0代表左上，1代表右上，2代表左下，3代表右下
-				std::vector<Point> pointRects = circleBySubRect(index, &pointRect, distance, *circle);
-				for (auto pointRec = pointRects.begin(); pointRec != pointRects.end();pointRec++) {
-					setPoint.insert(*pointRec);
-				}
-				setPoint.insert(pointRect);
-			}
+		addToObstacleSet(setPoint, rect, eigthSubRectss, *circle, distance);//将被障碍物占领的区域加入集合
 
-		}
 	}
-	
-
 	std::cout << "the subRect that has been obstacle:" << std::endl;
 	for (auto subRectHasObstacle = setPoint.begin(); subRectHasObstacle != setPoint.end();subRectHasObstacle++) {
 		
@@ -189,6 +206,7 @@ std::vector<Point> Canvas::eightSubRectsByOnePoint(Point *pointRect)
 	eightSubRectsVector.push_back(point5);//下标5代表矩形右上方区域
 	eightSubRectsVector.push_back(point6);//下标6代表矩形左下区域
 	eightSubRectsVector.push_back(point7);//下标7代表矩形右下方区域
+	eightSubRectsVector.push_back(*pointRect);//参数传入的子区域本身
 
 	return eightSubRectsVector;
 }
