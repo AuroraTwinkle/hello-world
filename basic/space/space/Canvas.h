@@ -24,7 +24,7 @@ public:
 	double distanceBtwPoints(Point pt, Point pt1);//计算两个点之间的距离
 	Point findCenterInWhichSubRect(Circle &circle);//计算出圆心位于哪个子区域
 	Rect addRect(int x_origin, int y_origin, int x_max, int y_max);//添加一个矩形区域
-	void addToObstacleSet(std::set<Point> &setPoint,Rect *rect, std::vector<Point> eigthSubRectss, Circle circle, std::vector<double> distance);
+	void addToObstacleSet(std::set<Point> &setPoint,Rect *rect, std::vector<Point> eigthSubRectss, Circle circle, std::vector<double> distance);//将被障碍物占领的子区域加入集合
 	bool isInRect(Rect *rect, Point pointRect);//判断一个子区域是否是合法区域
 	std::set<Point> findSubRectHasObstacle(Rect *rect, std::vector<Circle> &vectorCircle);//寻找被障碍物（圆形）占领的子区域
 	std::vector<Point> eightSubRectsByOnePoint(Point *pointRect);//由一个子区域起始点的坐标计算出其周围八个子区域起始坐标

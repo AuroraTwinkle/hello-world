@@ -172,7 +172,7 @@ std::set<Point> Canvas::findSubRectHasObstacle(Rect * rect, std::vector<Circle> 
 
 	}
 	std::cout << "the subRect that has been obstacle:" << std::endl;
-	for (auto subRectHasObstacle = setPoint.begin(); subRectHasObstacle != setPoint.end();subRectHasObstacle++) {
+	for (auto subRectHasObstacle = setPoint.begin(); subRectHasObstacle != setPoint.end();subRectHasObstacle++) {//遍历打印被占领区域
 		
 		std::cout << "(" << subRectHasObstacle->x_origin << "," <<subRectHasObstacle->y_origin<<  ")" << std::endl;
 
