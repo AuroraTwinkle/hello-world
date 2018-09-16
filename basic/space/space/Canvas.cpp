@@ -218,16 +218,11 @@ std::vector<Point> Canvas::eightSubRectsByOnePoint(Point *pointRect)
 std::vector<Point> Canvas::fourVertexOfRect(Point * pointRect)
 {
 	std::vector<Point> fourVertexVector;
+	std::vector<Point> eightSubRects = eightSubRectsByOnePoint(pointRect);
 
-	Point leftUpPoint(pointRect->getX_origin(), pointRect->getX_origin());//子区域左上方顶点坐标
-	Point rightUpPoint(pointRect->getX_origin() + this->getXscalar(), pointRect->getY_origin());//子区域右上方顶点坐标
-	Point leftDownPoint(pointRect->getX_origin(), pointRect->getY_origin() + this->getYscalar());//子区域左下方顶点坐标
-	Point rightDownPoint(pointRect->getX_origin() + this->getXscalar(), pointRect->getY_origin() + this->getYscalar());//子区域右下方顶点坐标
-
-	fourVertexVector.push_back(leftUpPoint);
-	fourVertexVector.push_back(rightUpPoint);
-	fourVertexVector.push_back(leftDownPoint);
-	fourVertexVector.push_back(rightDownPoint);
+	for (int i = 4; i < 8; i++) {
+		fourVertexVector.push_back(eightSubRects[i]); //eightSubRects[4], [5], [6], [7]分别代表左上，右上，左下，右下子区域
+	}
 
 	return fourVertexVector;
 }
