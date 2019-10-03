@@ -29,11 +29,13 @@ void sortQuick(int *pHead, int *pTail);
 
 int *getMiddle(int *pHead, int *pTail);
 
+int *getMidByLink(int *pHead, int *pTail);
+
 void quickSortByStack(sqList *list);
 
 int getArray(int **array) {
     srand((unsigned) time(NULL));
-    int length = rand() % 10 + 10000000;
+    int length = rand() % 10 + 20;
     if (length <= 0) {
         return -1;
     }
@@ -47,7 +49,8 @@ int getArray(int **array) {
 
     for (int i = 0; i < length; i++) {
 
-        *arrayData = rand() % 20;
+        *arrayData = rand() % 40;
+        //*arrayData=i;
         if (i == length - 1) { break; }
         arrayData++;
     }
@@ -117,27 +120,47 @@ void sortSeqList(sqList *list) {
 void quickSortByStack(sqList *list) {
     if (list == NULL || list->length < 1) { return; }
     stack s;
-    if (newStack(&s, sizeof(int **) )!= 1) { return; }
+    if (newStack(&s, sizeof(int **)) != 1) { return; }
     int *pHead = list->data;
     int *pTail = list->data + list->length - 1;
-    if(pushStack(&s,&pTail)!=1){ return;}
-    if(pushStack(&s,&pHead)!=1){ return;}
-    while (isEmpty(&s)!=1){
-        printf("stack length:%d\n",s.length);
-        if((popStack(&s,&pHead)!=1)){ return;}
-        if((popStack(&s,&pTail)!=1)){ return;}
-        int *middle=getMiddle(pHead,pTail);
-        if(middle-1>pHead){
-            int *ptr=middle-1;
-            if(pushStack(&s,&ptr)!=1){ return;}
-            if(pushStack(&s,&pHead)!=1){ return;}
+    if (pushStack(&s, &pTail) != 1) { return; }
+    if (pushStack(&s, &pHead) != 1) { return; }
+    while (isEmpty(&s) != 1) {
+        //printf("stack length:%d\n",s.length);
+        if ((popStack(&s, &pHead) != 1)) { return; }
+        if ((popStack(&s, &pTail) != 1)) { return; }
+        int *middle = getMidByLink(pHead, pTail);
+        if (middle - 1 > pHead) {
+            int *ptr = middle - 1;
+            if (pushStack(&s, &ptr) != 1) { return; }
+            if (pushStack(&s, &pHead) != 1) { return; }
         }
-        if(middle+1<pTail){
-            int *ptr=middle+1;
-            if(pushStack(&s,&pTail)!=1){ return;}
-            if(pushStack(&s,&ptr)!=1){ return;}
+        if (middle + 1 < pTail) {
+            int *ptr = middle + 1;
+            if (pushStack(&s, &pTail) != 1) { return; }
+            if (pushStack(&s, &ptr) != 1) { return; }
         }
     }
+}
+
+int *getMidByLink(int *pHead, int *pTail) {
+    if (pHead == NULL || pTail == NULL) { return NULL; }
+    int key = *pTail;
+    int *cur = pHead;
+    int *pre = pHead - 1;
+    int tmp=0;
+    while (cur < pTail) {
+        while (*cur < key && ++pre != cur) {
+            tmp = *cur;
+            *cur = *pre;
+            *pre = tmp;
+        }
+        cur++;
+    }
+    tmp=*(++pre);
+    *pre = *pTail;
+    *pTail=tmp;
+    return pre;
 }
 
 #endif //DATASTRUCTURE_UTILITIES_H

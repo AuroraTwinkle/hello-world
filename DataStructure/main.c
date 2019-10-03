@@ -10,12 +10,14 @@ int main() {
 //    pushStack(&s, &tmp);
 //    popStack(&s,&tmp);
     sqList *list = getSeqList();
-    //printSeqList(list);
+    printSeqList(list);
     //reverse(list);
     //deleteX(list,10);
     //deleteX1(list,10);
     //deleteBtw(list,4,10);
     quickSortByStack(list);
+    printSeqList(list);
+    deleteBtw1(list,0,10);
     //sortSeqList(list);
     printSeqList(list);
     if (list->data != NULL) {
